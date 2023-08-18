@@ -1,6 +1,6 @@
 
 import { CommonHeader } from '@/components/SearchBar';
-import type { ProColumns } from '@ant-design/pro-components';
+import type { EditableFormInstance, ProColumns } from '@ant-design/pro-components';
 import styles from './index.less';
 import {
   EditableProTable,
@@ -8,17 +8,10 @@ import {
   ProFormField,
   ProFormRadio,
 } from '@ant-design/pro-components';
-import { Button, Form } from 'antd';
-import React, { useState } from 'react';
+import { Button, Form, Table } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import { history } from 'umi';
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
+import { APIInfocollection } from '@/services/client/infocollection';
 
 type DataSourceType = {
   id: React.Key;
@@ -31,8 +24,18 @@ type DataSourceType = {
   children?: DataSourceType[];
 };
 
-const defaultData: DataSourceType[] = [
-  {
+
+export default () => {
+  const searchItem = {
+    infoName: true,
+    infoCategory: true,
+  };
+  const actionRef = useRef<ActionType>();
+  const editableFormRef = useRef<EditableFormInstance>();
+  const [isModify, setIsModify] = useState<boolean>(false);
+  const [tableForm] = Form.useForm();
+  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
+  const [dataSource, setDataSource] = useState([{
     id: 624748504,
     title: '活动名称一',
     readonly: '活动名称一',
@@ -49,22 +52,11 @@ const defaultData: DataSourceType[] = [
     state: 'closed',
     created_at: '1590481162000',
     update_at: '1590481162000',
-  },
-];
-
-export default () => {
-  const searchItem = {
-    infoName: true,
-    infoCategory: true,
-  };
-  const [isModify, setIsModify] = useState<boolean>(false);
-  const [tableForm] = Form.useForm();
-  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
-  const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
+  }]);
   const [position, setPosition] = useState('hidden');
+  const [hehe, setHehe] = useState('1')
   const [pagination, setPagination] = useState(false);
-
-  const columns: ProColumns<DataSourceType>[] = [
+  const b_columns: ProColumns<DataSourceType>[] = [
     {
       title: '操作',
       className: 'textCenter deleteBtn',
@@ -83,7 +75,6 @@ export default () => {
     {
       title: '信息名称',
       dataIndex: 'readonly',
-      tooltip: '只读，使用form.getFieldValue可以获取到值',
       width: '15%',
     },
     {
@@ -95,26 +86,65 @@ export default () => {
       title: '备注',
       dataIndex: 'decs',
     },
-
-
   ];
+  const n_columns: ProColumns<DataSourceType>[] = [
+    {
+      title: '信息ID',
+      dataIndex: 'title',
+      readonly: true,
+      width: '15%',
+    },
+    {
+      title: '信息名称',
+      dataIndex: 'readonly',
+      width: '15%',
+    },
+    {
+      title: '信息类别',
+      key: 'state',
+      dataIndex: 'state',
+    },
+    {
+      title: '备注',
+      dataIndex: 'decs',
+    },
+  ];
+  const [columns, setColumns] = useState<ProColumns<DataSourceType>[]>(n_columns)
+
+
+
+  useEffect(() => {
+    APIInfocollection.fetInfoClass().then((res) => {
+      setDataSource(res.data)
+      console.log(dataSource,'3333');
+
+    })
+  }, []);
+
 
   return (
     <>
       <CommonHeader.Header searchItem={searchItem} ></CommonHeader.Header>
-      <div className={styles.rightItem}>   
-        <div className='primaryTitle' style={{position:'absolute',zIndex:'999',margin:'30px 0 0 20px'}}>信息分类表</div>
-        <EditableProTable<DataSourceType>
+      <div className={styles.rightItem}>
+        <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '30px 0 0 20px' }}>信息分类表</div>
+        <EditableProTable
           className='tableStyle'
-          name='table'
-          rowKey="id"
+          // name='table'//这个属性要看源码
+          rowKey='id'
+          key={'id'}
+          // rowKey="id"
           scroll={{
             x: 960,
           }}
+          editableFormRef={editableFormRef}
+          actionRef={actionRef}
+          columns={columns}
+          dataSource={dataSource}
+          value={dataSource}
           toolBarRender={() => {
             return [
               <>
-                <Button type="primary" onClick={()=>{
+                <Button type="primary" onClick={() => {
                   history.push('/information-collection/configuration/classMaintenance')
                 }}>类别维护</Button>
                 <Button
@@ -125,6 +155,7 @@ export default () => {
                     setIsModify(true);
                     setPosition('show')
                     setPagination(true)
+                    setColumns(b_columns)
                   }}
                 >
                   {isModify ? '保存' : '编辑'}
@@ -134,16 +165,15 @@ export default () => {
                   setEditableRowKeys([]);
                   setIsModify(false);
                   setPosition('hidden');
-                  setPagination(false)
+                  setPagination(false);
+                  setColumns(n_columns)
                 }}>
                   取消
                 </Button> : ''}
-
-
               </>
-
             ];
           }}
+     
           recordCreatorProps={
             position !== 'hidden'
               ? {
@@ -152,35 +182,16 @@ export default () => {
               }
               : false
           }
-          loading={false}
-          columns={columns}
-          request={async () => ({
-            data: defaultData,
-            total: 3,
-            success: true,
-          })}
-          value={dataSource}
-          pagination={{
-            disabled: pagination,
-            // current,
-            // pageSize,
-            showSizeChanger: false,
-
-            onChange: (val) => {
-              // setCurrent(val);
-              setIsModify(false);
-              setEditableRowKeys([]);
-            }
-          }}
-          onChange={setDataSource}
+          debounceTime={500}
+          // loading={false}
+          // onChange={setDataSource}
           editable={{
-            form: tableForm,
+            // form: tableForm,
             type: 'multiple',
             editableKeys,
             onlyOneLineEditorAlertMessage: false,
             onValuesChange: (record, recordList: any) => {
               //数据改变时重新渲染列表
-
               // recordList?.forEach((item: any) => {
               // item.componentType = getSelectLabel(item?.componentType);
               // item.componentBrand = getSelectLabel(item?.componentBrand);
@@ -192,13 +203,12 @@ export default () => {
             actionRender: (row, config, defaultDoms) => {
               return [defaultDoms.delete];
             },
-
             onChange: setEditableRowKeys,
             deleteText: '—',
             deletePopconfirmMessage: false,
           }}
         />
-
+            
       </div>
     </>
   );

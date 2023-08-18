@@ -107,7 +107,7 @@ export default () => {
                 title: <a onClick={()=>{history.push('/information-collection/configuration/classification')}}>信息分类表</a>,
               },
               {
-                title: <a style={{color:'#333'}} onClick={()=>{history.push('/information-collection/configuration/classMaintenance')}}>类别维护</a>,
+                title: <span onClick={()=>{history.push('/information-collection/configuration/classMaintenance')}}>类别维护</span>,
               }
             ]}
           />
