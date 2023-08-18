@@ -1,0 +1,127 @@
+.searchBar,
+.searchWrap,
+.searchBtnWrap {
+    display: flex;
+}
+
+
+.searchBar {
+    background-color: #fff;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+
+
+    .searchWrap {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        width: 100%;
+        flex-wrap: wrap;
+
+        :global {
+
+            .ant-btn-default {
+                color: #333 !important;
+                border-color: #d9d9d9 !important;
+            }
+
+            .ant-btn-default:hover {
+                color: #E65E63 !important;
+                border-color: #E65E63 !important;
+
+                path {
+                    fill: #E65E63;
+                }
+            }
+        }
+    }
+
+    .searchBtnWrap {
+        margin-left: auto;
+    }
+}
+
+.searchBarDocument {
+    background-color: #fff;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+
+    .searchWrap {
+        display: grid;
+        grid-template-columns: repeat(3, 286px);
+        justify-content: space-between;
+        gap: 15px;
+        width: 100%;
+        flex-wrap: wrap;
+
+        :global {
+
+            .ant-btn-default {
+                color: #333 !important;
+                border-color: #d9d9d9 !important;
+            }
+
+            .ant-btn-default:hover {
+                color: #E65E63 !important;
+                border-color: #E65E63 !important;
+
+                path {
+                    fill: #E65E63;
+                }
+            }
+        }
+    }
+
+    .searchBtnWrap {
+        margin-left: auto;
+    }
+}
+
+.searchBarProcurement {
+    background-color: #fff;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+
+    .searchWrap {
+        display: grid;
+        grid-template-columns: repeat(4, 275px);
+        justify-content: space-between;
+        gap: 15px;
+        width: 100%;
+        flex-wrap: wrap;
+
+        :global {
+
+            .ant-btn-default {
+                color: #333 !important;
+                border-color: #d9d9d9 !important;
+            }
+
+            .ant-btn-default:hover {
+                color: #E65E63 !important;
+                border-color: #E65E63 !important;
+
+                path {
+                    fill: #E65E63;
+                }
+            }
+        }
+    }
+
+    .searchBtnWrap {
+        grid-column-start: 4;
+        justify-content: end;
+    }
+
+    :global {
+        .ant-form-item .ant-form-item-label>label {
+            width: 75px;
+        }
+    }
+}

@@ -1,0 +1,147 @@
+.userBox {
+  width: 100%;
+  height: calc(100vh - 76px);
+  display: flex;
+}
+
+.userLeft {
+  width: 250px;
+  height: 100%;
+  background: #fff;
+  overflow: scroll;
+  padding: 20px;
+
+  :global {
+    .ant-tree-list {
+      overflow-y: none;
+    }
+
+    //树形选择自定义icon
+    .ant-tree-switcher_close {
+      //这个是收起的背景图设置
+      width: 16px !important;
+      height: 15px !important;
+      margin-top: 5px !important;
+      margin-right: 4px !important;
+      // background: url('../../../../public/icons/open.png') no-repeat !important;
+      background-size: 100% 100% !important;
+    }
+
+    .ant-tree-switcher_open {
+      //这个是展开的背景图设置
+      width: 16px !important;
+      height: 15px !important;
+      margin-top: 5px !important;
+      margin-right: 4px !important;
+      // background: url('../../../../public/icons/shut.png') no-repeat !important;
+      background-size: 100% 100% !important;
+    }
+
+    .anticon.anticon-caret-down.ant-tree-switcher-icon {
+      //把三角形隐藏直接透明度设置为1
+      opacity: 0 !important;
+    }
+  }
+}
+
+.userRight {
+  flex: 1;
+  height: 100%;
+  margin-left: 10px;
+  background: #ededed;
+  min-width: 1056px;
+
+  .rightTop,
+  .rightBottom {
+    background: #FFFFFF;
+  }
+  form>div>div:nth-last-of-type(1)>div {
+    margin-right: 0;
+  }
+
+  .rightBottom {
+    margin-top: 10px;
+    height: calc(100% - 82px);
+    overflow: auto;
+
+    :global(.ant-space) {
+      width: 100%;
+      gap: 15px !important;
+      height: 40px;
+      margin-top: 20px;
+      padding-right: 20px;
+      justify-content: flex-end;
+
+    }
+
+  }
+}
+
+.userTable {
+  //用newUser文件需要注释掉此这行
+  margin-top: 16px;
+
+  :global {
+    .ant-table {
+      margin: 0 20px;
+      // border-bottom: 1px solid #ebeef5;
+      border-radius: 0 !important;
+
+
+      .ant-table-header {
+        .ant-table-cell {
+          color: #333;
+        }
+
+        >table>thead>tr:first-child>*:first-child {
+          border-start-start-radius: 0;
+        }
+      }
+    }
+
+    .ant-table-header {
+      border-radius: 0 !important;
+    }
+
+    .ant-pagination {
+      margin-right: 20px !important;
+    }
+
+    // .ant-table-thead>tr>th {
+    //   background-color: #f5f7fa;
+    //   color: #909399;
+    //   font-weight: 500;
+    // }
+
+    .ant-table-thead>tr>th::before {
+      width: 0 !important;
+    }
+
+    // .ant-table-cell:nth-of-type(1),
+    // .ant-table-cell:nth-last-of-type(1),
+    // .ant-table-header {
+    //   border-radius: 0 !important;
+    // }
+
+    .ant-table-row-selected {
+      background: none !important;
+    }
+
+    .ant-table-tbody>tr:nth-child(odd) {
+      background-color: #fafafa;
+    }
+
+    .ant-table-tbody>tr:nth-child(even) {
+      background-color: #fff;
+    }
+
+    .ant-table-selection-column {
+      padding-left: 44px !important;
+      z-index: 999;
+    }
+
+    .ant-btn-sm {
+      height: 32px !important;
+    }
+  }
+}

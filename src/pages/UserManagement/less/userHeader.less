@@ -1,0 +1,59 @@
+.user_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-flow: row wrap;
+    flex-direction: row;
+
+    :global {
+
+        .ant-btn-default {
+            color: #333 !important;
+            border-color: #d9d9d9 !important;
+        }
+
+        .ant-btn-default:hover {
+            color: #E65E63 !important;
+            border-color: #E65E63 !important;
+
+            path {
+                fill: #E65E63;
+            }
+        }
+    }
+
+    form {
+        width: 100%;
+
+        >div:nth-of-type(1) {
+            // width: 100%;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 20px;
+            gap: 25px;
+            margin: 0 !important;
+
+            div:nth-last-of-type(1) {
+                margin-left: auto;
+            }
+        }
+    }
+}
+
+.user_header_right {
+    padding-left: 45vw;
+    margin-bottom: 20px;
+    gap: 15px !important;
+
+    :global {
+        .ant-btn-sm {
+            height: 32px !important;
+        }
+    }
+}
+
+#setPwd {
+    >.ant-form-item {
+        justify-content: flex-end;
+    }
+}

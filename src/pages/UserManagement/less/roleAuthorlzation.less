@@ -1,0 +1,33 @@
+.authorlzation {
+  // height: 500px !important;
+  // overflow-y: scroll !important;
+
+  :global {
+
+    //树形选择自定义icon
+    .ant-tree-switcher_close {
+      //这个是收起的背景图设置
+      width: 16px !important;
+      height: 15px !important;
+      margin-top: 5px !important;
+      margin-right: 8px !important;
+      // background: url('../../../../public/icons/open.png') no-repeat !important;
+      background-size: 100% 100% !important;
+    }
+
+    .ant-tree-switcher_open {
+      //这个是展开的背景图设置
+      width: 16px !important;
+      height: 15px !important;
+      margin-top: 5px !important;
+      margin-right: 8px !important;
+      // background: url('../../../../public/icons/shut.png') no-repeat !important;
+      background-size: 100% 100% !important;
+    }
+
+    .anticon.anticon-caret-down.ant-tree-switcher-icon {
+      //把三角形隐藏直接透明度设置为1
+      opacity: 0 !important;
+    }
+  }
+}

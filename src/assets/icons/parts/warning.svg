@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>警示</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1-3-2.工作管理-合同维护-编辑状态备份-2" transform="translate(-1122.000000, -219.000000)">
+            <g id="编组-4" transform="translate(1122.000000, 216.000000)">
+                <g id="警示" transform="translate(0.000000, 3.000000)">
+                    <circle id="椭圆形" stroke="#DE2930" cx="7" cy="7" r="6.5"></circle>
+                    <g id="！" transform="translate(6.064622, 2.431741)" fill="#DE2930" fill-rule="nonzero">
+                        <path d="M0.549534861,5.91626892 L1.32122211,5.91626892 L1.61352789,1.37968327 L1.63691235,0 L0.233844622,0 L0.268921315,1.37968327 L0.549534861,5.91626892 Z M0.935378486,8.80425 C1.44983665,8.80425 1.87075697,8.45348307 1.87075697,7.88056375 C1.87075697,7.33102888 1.44983665,6.96856972 0.935378486,6.96856972 C0.420920319,6.96856972 0,7.33102888 0,7.88056375 C0,8.45348307 0.420920319,8.80425 0.935378486,8.80425 Z" id="形状"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
