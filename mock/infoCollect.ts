@@ -139,10 +139,10 @@ export default {
         data.push(dataSource[i])
       } else {
         // 修改覆盖
-        // let has = data.findIndex((item) => {
-        //   return dataSource[i].id == item.id
-        // })
-        // data.splice(has, 1, dataSource[i])
+        let has = data.findIndex((item) => {
+          return dataSource[i].id == item.id
+        })
+        data.splice(has, 1, dataSource[i])
       }
     }
 

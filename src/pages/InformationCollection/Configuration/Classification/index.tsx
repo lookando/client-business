@@ -95,7 +95,7 @@ export default () => {
     },
   ];
   const [columns, setColumns] = useState<ProColumns<DataSourceType>[]>(n_columns)
-  const fetInfoClass = (x,y) => {
+  const fetInfoClass = (x, y) => {
     APIInfocollection.fetInfoClass({ current: x, pageSize: y, }).then((res) => {
       setDataSource(res.data)
       setTotal(res.total)
@@ -119,7 +119,7 @@ export default () => {
 
 
   useEffect(() => {
-    fetInfoClass(current,pageSize)
+    fetInfoClass(current, pageSize)
   }, []);
 
 
@@ -166,7 +166,7 @@ export default () => {
                       setPosition('hidden');
                       setColumns(n_columns)
                       setCurrent(1)
-                      fetInfoClass(1,pageSize)
+                      fetInfoClass(1, pageSize)
                     }
                   }}
                 >
@@ -179,7 +179,7 @@ export default () => {
                   setPosition('hidden');
                   setPagination(false)
                   setColumns(n_columns)
-                  fetInfoClass(current,pageSize)
+                  fetInfoClass(current, pageSize)
                 }}>
                   取消
                 </Button> : ''}
@@ -207,8 +207,6 @@ export default () => {
             onValuesChange: (record, recordList: any) => {
               //数据改变时重新渲染列表
               console.log(record, 555);
-
-
               // recordList?.forEach((item: any) => {
               // item.componentType = getSelectLabel(item?.componentType);
               // item.componentBrand = getSelectLabel(item?.componentBrand);
@@ -216,7 +214,6 @@ export default () => {
               // });
               setDataSource(recordList);
               console.log(recordList);
-
               // setCurrentRow(record);
             },
             actionRender: (row, config, defaultDoms) => {
@@ -239,7 +236,7 @@ export default () => {
         //   }
         // }}
         />
-        <Pagination disabled={pagination} current={current} onChange={onChange} defaultCurrent={1} total={total} showSizeChanger showQuickJumper defaultPageSize={pageSize} />
+        <Pagination className={styles.pagination} disabled={pagination} current={current} onChange={onChange} defaultCurrent={1} total={total} showSizeChanger showQuickJumper defaultPageSize={pageSize} />
       </div>
     </>
   );

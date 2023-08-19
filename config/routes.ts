@@ -95,13 +95,13 @@ export default [
     routes: [
       {
         path: '/user-management/user',
-        name: '用户',
+        name: '用户管理',
         component: './UserManagement/user',
         // access: 'normalRouteFilter',
       },
       {
         path: '/user-management/role',
-        name: '角色',
+        name: '角色管理',
         component: './UserManagement/role',
         // access: 'normalRouteFilter',
       },

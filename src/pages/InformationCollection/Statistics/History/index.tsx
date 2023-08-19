@@ -8,8 +8,9 @@ import {
   ProFormField,
   ProFormRadio,
 } from '@ant-design/pro-components';
-import { Button, Form } from 'antd';
-import React, { useState } from 'react';
+import { Button, Form, Pagination } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { APIInfocollection } from '@/services/client/infocollection';
 
 
 const waitTime = (time: number = 100) => {
@@ -65,7 +66,9 @@ export default () => {
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
   const [position, setPosition] = useState('hidden');
   const [pagination, setPagination] = useState(false);
-
+  const [pageSize, setPageSize] = useState(2);
+  const [total, setTotal] = useState<number>()
+  const [current, setCurrent] = useState(1);
   const columns: ProColumns<DataSourceType>[] = [
     {
       title: '时间',
@@ -112,6 +115,23 @@ export default () => {
     },
   ];
 
+  const onChange = (x: number, y: number) => {
+    setCurrent(x)
+    setPageSize(y)
+    APIInfocollection.fetInfoClass({ current: x, pageSize: y, }).then((res) => {
+      setDataSource(res.data)
+      setTotal(res.total)
+    })
+  }
+  const fetInfoClass = (x, y) => {
+    APIInfocollection.fetInfoClass({ current: x, pageSize: y, }).then((res) => {
+      setDataSource(res.data)
+      setTotal(res.total)
+    })
+  }
+  useEffect(() => {
+    fetInfoClass(current, pageSize)
+  }, []);
   return (
     <>
       <CommonHeader.Header searchItem={searchItem} ></CommonHeader.Header>
@@ -119,8 +139,7 @@ export default () => {
         <div className='primaryTitle' style={{position:'absolute',zIndex:'999',margin:'24px 0 0 20px'}}>历史统计</div>
         <EditableProTable<DataSourceType>
           className='tableStyle'
-          style={{marginTop:"70px"}}
-          name='table'
+          style={{ marginTop: "70px" }}
           rowKey="id"
           scroll={{
             x: 960,
@@ -128,31 +147,16 @@ export default () => {
           recordCreatorProps={
             position !== 'hidden'
               ? {
-                position: position as 'top',
-                record: () => ({ id: (Math.random() * 1000000).toFixed(0) }),
+                newRecordType: 'dataSource',
+                record: () => {
+                  return { id: (Math.random() * 1000000).toFixed(0) }
+                },
               }
               : false
           }
           loading={false}
           columns={columns}
-          request={async () => ({
-            data: defaultData,
-            total: 3,
-            success: true,
-          })}
           value={dataSource}
-          pagination={{
-            disabled: pagination,
-            // current,
-            // pageSize,
-            showSizeChanger: false,
-
-            onChange: (val) => {
-              // setCurrent(val);
-    
-              setEditableRowKeys([]);
-            }
-          }}
           onChange={setDataSource}
           editable={{
             form: tableForm,
@@ -179,6 +183,7 @@ export default () => {
             deletePopconfirmMessage: false,
           }}
         />
+        <Pagination className={styles.pagination} disabled={pagination} current={current} onChange={onChange} defaultCurrent={1} total={total} showSizeChanger showQuickJumper defaultPageSize={pageSize} />
 
       </div>
     </>

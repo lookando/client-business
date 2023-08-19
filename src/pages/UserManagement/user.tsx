@@ -12,6 +12,7 @@ import { ReactComponent as UnfrozenIcon } from '@/assets/icons/button/unfrozen.s
 import { ReactComponent as ResetIcon } from '@/assets/icons/button/reset.svg';
 import { commonAPI } from '@/pages/common';
 import debounce from 'lodash/debounce';
+import { DataNode } from 'antd/es/tree';
 
 interface DataType {
   key: React.Key;
@@ -26,6 +27,7 @@ interface DataType {
 const User: React.FC = () => {
   //md5
   const md5 = require('md5');
+
   const [treeData, setTreeData] = useState<any>([]);
   const [tbleData, setTableData] = useState([]);
   const [TableSomeData, setTableSomeData] = useState<any>({});

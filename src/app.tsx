@@ -8,7 +8,7 @@ import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import React from 'react';
 import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { IconMap } from '@/components/Icons/MenuIcon';
-import Icon from '@ant-design/icons';
+import Icon, { ToTopOutlined } from '@ant-design/icons';
 import portrait from '@/assets/header/portrait.png';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -79,10 +79,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     childrenRender: false,
     menuDataRender: (menuData) => {
       return menuData.map((item) => {
+        console.log(item,'111');
+        
         return {
           ...item,
-          icon:
-            typeof item.icon === 'string' && item.icon.indexOf('|svg') > -1 ? (
+          // icon:<Icon component={'user'}></Icon>
+          // icon:<ToTopOutlined />
+          // icon:<Icon component={IconMap[item.icon]} style={{ fontSize: 16 }} />
+          icon: typeof item.icon === 'string' && item.icon.indexOf('|svg') > -1 ? (
               <Icon component={IconMap[item.icon.replace('|svg', '')]} style={{ fontSize: 16 }} />
             ) : (
               item.icon

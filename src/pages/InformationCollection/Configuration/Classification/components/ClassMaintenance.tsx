@@ -7,16 +7,9 @@ import {
   ProFormRadio,
 } from '@ant-design/pro-components';
 import { history } from 'umi';
-import { Breadcrumb, Button, Form } from 'antd';
-import React, { useState } from 'react';
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
+import { Breadcrumb, Button, Form, Pagination } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { APIInfocollection } from '@/services/client/infocollection';
 
 type DataSourceType = {
   id: React.Key;
@@ -29,27 +22,6 @@ type DataSourceType = {
   children?: DataSourceType[];
 };
 
-const defaultData: DataSourceType[] = [
-  {
-    id: 624748504,
-    title: '活动名称一',
-    readonly: '活动名称一',
-    decs: '这个活动真好玩',
-    state: 'open',
-    created_at: '1590486176000',
-    update_at: '1590486176000',
-  },
-  {
-    id: 624691229,
-    title: '活动名称二',
-    readonly: '活动名称二',
-    decs: '这个活动真好玩',
-    state: 'closed',
-    created_at: '1590481162000',
-    update_at: '1590481162000',
-  },
-];
-
 export default () => {
   const [isModify, setIsModify] = useState<boolean>(false);
   const [tableForm] = Form.useForm();
@@ -58,7 +30,10 @@ export default () => {
   const [position, setPosition] = useState('hidden');
   const [pagination, setPagination] = useState(false);
   const breadcrumb: any = history.location;
-  const columns: ProColumns<DataSourceType>[] = [
+  const [current, setCurrent] = useState(1);
+  const [total, setTotal] = useState<number>()
+  const [pageSize, setPageSize] = useState(2);
+  const y_columns: ProColumns<DataSourceType>[] = [
     {
       title: '操作',
       className: 'textCenter deleteBtn',
@@ -72,12 +47,31 @@ export default () => {
       title: '信息ID',
       dataIndex: 'title',
       readonly: true,
+    },
+    {
+      title: '信息名称',
+      dataIndex: 'readonly',
+    },
+    {
+      title: '信息类别',
+      key: 'state',
+      dataIndex: 'state',
+    },
+    {
+      title: '备注',
+      dataIndex: 'decs',
+    },
+  ];
+  const n_columns: ProColumns<DataSourceType>[] = [
+    {
+      title: '信息ID',
+      dataIndex: 'title',
+      readonly: true,
       width: '15%',
     },
     {
       title: '信息名称',
       dataIndex: 'readonly',
-      tooltip: '只读，使用form.getFieldValue可以获取到值',
       width: '15%',
     },
     {
@@ -89,12 +83,31 @@ export default () => {
       title: '备注',
       dataIndex: 'decs',
     },
-
-
   ];
+  const [columns, setColumns] = useState<ProColumns<DataSourceType>[]>(n_columns)
+  const fetInfoClass = (x, y) => {
+    APIInfocollection.fetInfoClass({ current: x, pageSize: y, }).then((res) => {
+      setDataSource(res.data)
+      setTotal(res.total)
+    })
+  }
 
-  console.log(breadcrumb, 'breadcrumb');
+  const onChange = (x: number, y: number) => {
+    setCurrent(x)
+    setPageSize(y)
+    APIInfocollection.fetInfoClass({ current: x, pageSize: y, }).then((res) => {
+      setDataSource(res.data)
+      setTotal(res.total)
+    })
+  }
+  const onSave = () => {
+    APIInfocollection.saveInfoClass({ current: current, pageSize: pageSize, dataSource: dataSource }).then((res) => {
+    })
+  }
 
+  useEffect(() => {
+    fetInfoClass(current, pageSize)
+  }, []);
 
   return (
     <>
@@ -104,10 +117,10 @@ export default () => {
             style={{ marginLeft: '15px' }}
             items={[
               {
-                title: <a onClick={()=>{history.push('/information-collection/configuration/classification')}}>信息分类表</a>,
+                title: <a onClick={() => { history.push('/information-collection/configuration/classification') }}>信息分类表</a>,
               },
               {
-                title: <span onClick={()=>{history.push('/information-collection/configuration/classMaintenance')}}>类别维护</span>,
+                title: <span onClick={() => { history.push('/information-collection/configuration/classMaintenance') }}>类别维护</span>,
               }
             ]}
           />
@@ -120,7 +133,6 @@ export default () => {
         <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '30px 0 0 20px' }}>类别维护</div>
         <EditableProTable<DataSourceType>
           className='tableStyle'
-          name='table'
           rowKey="id"
           scroll={{
             x: 960,
@@ -132,84 +144,90 @@ export default () => {
                   type="primary"
                   key="save"
                   onClick={() => {
-                    setEditableRowKeys(() => dataSource?.map((item: any) => item.id));
-                    setIsModify(true);
-                    setPosition('show')
-                    setPagination(true)
+                    if (isModify == false) {
+                      setEditableRowKeys(() => dataSource?.map((item: any) => item.id));
+                      setIsModify(true);
+                      setPosition('show');
+                      setPagination(true)
+                      setColumns(y_columns)
+                    } else {
+                      // 保存按钮
+                      onSave()
+                      setEditableRowKeys([]);
+                      setIsModify(false);
+                      setPagination(false)
+                      setPosition('hidden');
+                      setColumns(n_columns)
+                      setCurrent(1)
+                      fetInfoClass(1, pageSize)
+                    }
                   }}
                 >
                   {isModify ? '保存' : '编辑'}
                 </Button>
                 {isModify ? <Button type="primary" htmlType="submit" size="middle" onClick={() => {
-                  // props.onCancel();
                   setEditableRowKeys([]);
                   setIsModify(false);
                   setPosition('hidden');
                   setPagination(false)
+                  setColumns(n_columns)
+                  fetInfoClass(current, pageSize)
                 }}>
                   取消
                 </Button> : ''}
-
-
               </>
-
             ];
           }}
           recordCreatorProps={
             position !== 'hidden'
               ? {
-                position: position as 'top',
-                record: () => ({ id: (Math.random() * 1000000).toFixed(0) }),
+                newRecordType: 'dataSource',
+                record: () => {
+                  return { id: (Math.random() * 1000000).toFixed(0) }
+                },
               }
               : false
           }
           loading={false}
           columns={columns}
-          request={async () => ({
-            data: defaultData,
-            total: 3,
-            success: true,
-          })}
           value={dataSource}
-          pagination={{
-            disabled: pagination,
-            // current,
-            // pageSize,
-            showSizeChanger: false,
+          // pagination={{
+          //   disabled: pagination,
+          //   // current,
+          //   // pageSize,
+          //   showSizeChanger: false,
 
-            onChange: (val) => {
-              // setCurrent(val);
-              setIsModify(false);
-              setEditableRowKeys([]);
-            }
-          }}
+          //   onChange: (val) => {
+          //     // setCurrent(val);
+          //     setIsModify(false);
+          //     setEditableRowKeys([]);
+          //   }
+          // }}
           onChange={setDataSource}
           editable={{
-            form: tableForm,
+            // form: tableForm,
             type: 'multiple',
             editableKeys,
             onlyOneLineEditorAlertMessage: false,
             onValuesChange: (record, recordList: any) => {
               //数据改变时重新渲染列表
-
+              console.log(record, 555);
               // recordList?.forEach((item: any) => {
               // item.componentType = getSelectLabel(item?.componentType);
               // item.componentBrand = getSelectLabel(item?.componentBrand);
               // item.componentVersion = getSelectLabel(item?.componentVersion);
               // });
               setDataSource(recordList);
-              // setCurrentRow(record);
             },
             actionRender: (row, config, defaultDoms) => {
               return [defaultDoms.delete];
             },
-
             onChange: setEditableRowKeys,
             deleteText: '—',
             deletePopconfirmMessage: false,
           }}
         />
-
+        <Pagination  className={styles.pagination} disabled={pagination} current={current} onChange={onChange} defaultCurrent={1} total={total} showSizeChanger showQuickJumper defaultPageSize={pageSize} />
       </div>
     </>
   );
