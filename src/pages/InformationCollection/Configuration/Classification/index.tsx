@@ -1,6 +1,6 @@
 
 import { CommonHeader } from '@/components/SearchBar';
-import type { EditableFormInstance, ProColumns } from '@ant-design/pro-components';
+import type { ActionType, EditableFormInstance, ProColumns } from '@ant-design/pro-components';
 import styles from './index.less';
 import {
   EditableProTable,
@@ -8,7 +8,7 @@ import {
   ProFormField,
   ProFormRadio,
 } from '@ant-design/pro-components';
-import { Button, Form, Table } from 'antd';
+import { Button, Form, Pagination, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { history } from 'umi';
 import { APIInfocollection } from '@/services/client/infocollection';
@@ -35,27 +35,12 @@ export default () => {
   const [isModify, setIsModify] = useState<boolean>(false);
   const [tableForm] = Form.useForm();
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
-  const [dataSource, setDataSource] = useState([{
-    id: 624748504,
-    title: '活动名称一',
-    readonly: '活动名称一',
-    decs: '这个活动真好玩',
-    state: 'open',
-    created_at: '1590486176000',
-    update_at: '1590486176000',
-  },
-  {
-    id: 624691229,
-    title: '活动名称二',
-    readonly: '活动名称二',
-    decs: '这个活动真好玩',
-    state: 'closed',
-    created_at: '1590481162000',
-    update_at: '1590481162000',
-  }]);
+  const [dataSource, setDataSource] = useState();
+  const [pageSize, setPageSize] = useState(2);
   const [position, setPosition] = useState('hidden');
-  const [hehe, setHehe] = useState('1')
+  const [total, setTotal] = useState<number>()
   const [pagination, setPagination] = useState(false);
+  const [current, setCurrent] = useState(1);
   const b_columns: ProColumns<DataSourceType>[] = [
     {
       title: '操作',
@@ -110,15 +95,31 @@ export default () => {
     },
   ];
   const [columns, setColumns] = useState<ProColumns<DataSourceType>[]>(n_columns)
+  const fetInfoClass = (x,y) => {
+    APIInfocollection.fetInfoClass({ current: x, pageSize: y, }).then((res) => {
+      setDataSource(res.data)
+      setTotal(res.total)
+    })
+  }
+  const onChange = (x: number, y: number) => {
+    setCurrent(x)
+    setPageSize(y)
+    APIInfocollection.fetInfoClass({ current: x, pageSize: y, }).then((res) => {
+      setDataSource(res.data)
+      setTotal(res.total)
+    })
+  }
 
+  const onSave = () => {
+    APIInfocollection.saveInfoClass({ current: current, pageSize: pageSize, dataSource: dataSource }).then((res) => {
+      // setDataSource(res.data)
+      // setTotal(res.total)
+    })
+  }
 
 
   useEffect(() => {
-    APIInfocollection.fetInfoClass().then((res) => {
-      setDataSource(res.data)
-      console.log(dataSource,'3333');
-
-    })
+    fetInfoClass(current,pageSize)
   }, []);
 
 
@@ -131,8 +132,7 @@ export default () => {
           className='tableStyle'
           // name='table'//这个属性要看源码
           rowKey='id'
-          key={'id'}
-          // rowKey="id"
+          // key='id'
           scroll={{
             x: 960,
           }}
@@ -151,11 +151,23 @@ export default () => {
                   type="primary"
                   key="save"
                   onClick={() => {
-                    setEditableRowKeys(() => dataSource?.map((item: any) => item.id));
-                    setIsModify(true);
-                    setPosition('show')
-                    setPagination(true)
-                    setColumns(b_columns)
+                    if (isModify == false) {
+                      setEditableRowKeys(() => dataSource?.map((item: any) => item.id));
+                      setIsModify(true);
+                      setPosition('show');
+                      setPagination(true)
+                      setColumns(b_columns)
+                    } else {
+                      // 保存按钮
+                      onSave()
+                      setEditableRowKeys([]);
+                      setIsModify(false);
+                      setPagination(false)
+                      setPosition('hidden');
+                      setColumns(n_columns)
+                      setCurrent(1)
+                      fetInfoClass(1,pageSize)
+                    }
                   }}
                 >
                   {isModify ? '保存' : '编辑'}
@@ -165,20 +177,22 @@ export default () => {
                   setEditableRowKeys([]);
                   setIsModify(false);
                   setPosition('hidden');
-                  setPagination(false);
+                  setPagination(false)
                   setColumns(n_columns)
+                  fetInfoClass(current,pageSize)
                 }}>
                   取消
                 </Button> : ''}
               </>
             ];
           }}
-     
           recordCreatorProps={
             position !== 'hidden'
               ? {
-                position: position as 'top',
-                record: () => ({ id: (Math.random() * 1000000).toFixed(0) }),
+                newRecordType: 'dataSource',
+                record: () => {
+                  return { id: (Math.random() * 1000000).toFixed(0) }
+                },
               }
               : false
           }
@@ -192,12 +206,17 @@ export default () => {
             onlyOneLineEditorAlertMessage: false,
             onValuesChange: (record, recordList: any) => {
               //数据改变时重新渲染列表
+              console.log(record, 555);
+
+
               // recordList?.forEach((item: any) => {
               // item.componentType = getSelectLabel(item?.componentType);
               // item.componentBrand = getSelectLabel(item?.componentBrand);
               // item.componentVersion = getSelectLabel(item?.componentVersion);
               // });
               setDataSource(recordList);
+              console.log(recordList);
+
               // setCurrentRow(record);
             },
             actionRender: (row, config, defaultDoms) => {
@@ -207,8 +226,20 @@ export default () => {
             deleteText: '—',
             deletePopconfirmMessage: false,
           }}
+        // pagination={{
+        //   disabled: pagination,
+        //   // current,
+        //   pageSize,
+        //   showSizeChanger: false,
+
+        //   onChange: (val) => {
+        //     // setCurrent(val);
+        //     setIsModify(false);
+        //     setEditableRowKeys([]);
+        //   }
+        // }}
         />
-            
+        <Pagination disabled={pagination} current={current} onChange={onChange} defaultCurrent={1} total={total} showSizeChanger showQuickJumper defaultPageSize={pageSize} />
       </div>
     </>
   );
