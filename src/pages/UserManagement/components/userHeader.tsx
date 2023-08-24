@@ -37,12 +37,6 @@ const UserHeader: React.FC<DataType> = (props: any) => {
     const [form] = Form.useForm();
     const [addform] = Form.useForm();
     const [reform] = Form.useForm();
-    // const [dsab, setDsab] = useState(true);
-    // const [modalTitle, setModalTitle] = useState('');
-    // const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [modalShow, setModalShow] = useState(false);
-    // const [PwdmodalShow, setPwdModalShow] = useState(false);
-    // const [open, setOpen] = useState(true);
     const [value, setValue] = useState<string>();
 
     useEffect(() => {
@@ -67,11 +61,6 @@ const UserHeader: React.FC<DataType> = (props: any) => {
         props.onfinish(values);
         props.setDsab(true);
     };
-    //添加按钮
-    // const onAdd = () => {
-    //     setIsModalOpen(true);
-    //     props.onCloseAdd()
-    // }
     //弹窗隐藏
     const handleCancel = () => {
         props.setIsModalOpen(false);
@@ -86,29 +75,15 @@ const UserHeader: React.FC<DataType> = (props: any) => {
         let data = {
             username: values.username,
             realName: values.realName,
-            department: value
+            deptId: value
         };
         props.addSub(data)
     }
-    //冻结按钮
-    // const onFreeze = () => {
-    //     setModalTitle('冻结')
-    //     setModalShow(true)
-    // }
     //冻结确认||解冻确认
     const FreezeOk = () => {
         props.setModalShow(false)
         props.freeze(props.modalTitle)
     }
-    //解冻按钮
-    // const unFrozen = () => {
-    //     setModalTitle('解冻')
-    //     setModalShow(true)
-    // }
-    //重置密码
-    // const onResetPwd = () => {
-    //     setPwdModalShow(true)
-    // };
     //确认重置
     const resetPwd = (values: any) => {
         if (values.password1 === values.password2) {
@@ -130,9 +105,9 @@ const UserHeader: React.FC<DataType> = (props: any) => {
     const onSelectStatus = (value: string) => {
         props.selectStatus(value)
     }
-    // const onSelectType = (value: string) => {
-    //     props.selectType(value)
-    // }
+    const onSelectType = (value: string) => {
+        props.selectType(value)
+    }
     const onInpUser = (value: string) => {
         props.inpUserName(value)
     }
@@ -145,56 +120,42 @@ const UserHeader: React.FC<DataType> = (props: any) => {
     };
     //下拉搜索
     const filterTreeNode = (inputValue: string, treeNode: any) => {
-        return treeNode.titleabbr.indexOf(inputValue) > -1;
+        return treeNode.titleAbbr.indexOf(inputValue) > -1;
     }
     return (
         <>
-            <Form
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 10px' }}
-                form={form}
-                layout="inline"
-                autoComplete="off"
-                colon={false}
-                name="control-hooks"
-                onFinish={onFinish}
+            <div
+                className={styles.user_header}
             >
-                <Form.Item label="用户编号" name="username">
-                    <Input placeholder="请输入" style={{ width: '120px' }} onChange={(e) => { onInpUser(e.target.value) }} />
-                </Form.Item>
-                <Form.Item label="用户名称" name="realName">
-                    <Input placeholder="请输入" style={{ width: '120px' }} onChange={(e) => { onInpReal(e.target.value) }} />
-                </Form.Item>
-                <Form.Item label="用户状态" name="status">
-                    <Select style={{ width: '120px' }} placeholder='请选择' onChange={onSelectStatus} >
-                        <Select.Option value={0}>正常</Select.Option>
-                        <Select.Option value={1}>冻结</Select.Option>
-                        <Select.Option value={2}>注销</Select.Option>
-                    </Select>
-                </Form.Item>
-                <Form.Item label="用户角色" name="status">
-                    <Select style={{ width: '120px' }} placeholder='请选择' onChange={onSelectStatus} >
-                        <Select.Option value={0}>正常</Select.Option>
-                        <Select.Option value={1}>冻结</Select.Option>
-                        <Select.Option value={2}>注销</Select.Option>
-                    </Select>
-                </Form.Item>
-                {/* <Col span={3} style={{ flex: "none", maxWidth: "100%", padding: "0" }}>
-                            <Form.Item label="用户类型" name="userType">
-                                <Select style={{ width: '120px' }} placeholder='请选择' onChange={onSelectType} >
-                                    <Select.Option value={'SY'}>系统用户</Select.Option>
-                                    <Select.Option value={'OA'}>内部员工</Select.Option>
-                                    <Select.Option value={'OS'}>外包商</Select.Option>
-                                    <Select.Option value={'ST'}>外包员工</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        </Col> */}
-                <Form.Item>
-                    <Space>
-                        <Button type="primary" htmlType="submit">查询</Button>
-                        <Button htmlType="button" onClick={onReset}>重置</Button>
-                    </Space>
-                </Form.Item>
-            </Form>
+                <Form
+                    form={form}
+                    layout="inline"
+                    autoComplete="off"
+                    colon={false}
+                    name="control-hooks"
+                    onFinish={onFinish}
+                >
+                    <Form.Item label="用户编号" name="username">
+                        <Input placeholder="请输入" style={{ width: '180px' }} onChange={(e) => { onInpUser(e.target.value) }} />
+                    </Form.Item>
+                    <Form.Item label="用户名称" name="realName">
+                        <Input placeholder="请输入" style={{ width: '180px' }} onChange={(e) => { onInpReal(e.target.value) }} />
+                    </Form.Item>
+                    <Form.Item label="用户状态" name="status">
+                        <Select style={{ width: '180px' }} placeholder='请选择' onChange={onSelectStatus} >
+                            <Select.Option value={0}>正常</Select.Option>
+                            <Select.Option value={1}>冻结</Select.Option>
+                            <Select.Option value={2}>注销</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item>
+                        <Space>
+                            <Button type="primary" htmlType="submit">查询</Button>
+                            <Button htmlType="button" onClick={onReset}>重置</Button>
+                        </Space>
+                    </Form.Item>
+                </Form>
+            </div>
             <Modal title={
                 <div style={{ marginBottom: '30px' }}>
                     <Icon component={CreateIcon} style={{ fontSize: '22px' }} />
@@ -228,7 +189,7 @@ const UserHeader: React.FC<DataType> = (props: any) => {
                             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                             treeData={props.depList}
                             fieldNames={{
-                                label: 'titleabbr',
+                                label: 'titleAbbr',
                                 value: 'id',
                                 children: 'children',
                             }}
@@ -237,7 +198,7 @@ const UserHeader: React.FC<DataType> = (props: any) => {
                             onChange={onChange}
                         />
                     </Form.Item>
-                    <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '0', marginTop: '30px', marginLeft: 'auto' }}>
+                    <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '0', marginTop: '30px' }}>
                         <Space>
                             <Button onClick={handleCancel}>
                                 取消
@@ -291,8 +252,8 @@ const UserHeader: React.FC<DataType> = (props: any) => {
                     autoComplete="off"
                     colon={false}
                 >
-                    <Form.Item label="密码" name="password1" validateTrigger='onBlur' labelAlign='left' rules={[{ pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_])[A-Za-z\d@#$%^&+=!_]{10,}$/, message: '密码10-20位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符', }]}>
-                        <Input.Password placeholder="请输入" autoComplete="new-password" maxLength={20} />
+                    <Form.Item label="密码" name="password1" validateTrigger='onBlur' labelAlign='left' rules={[{ pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/, message: '密码8-20位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符', }]}>
+                        <Input.Password placeholder="请输入" autoComplete="new-password" />
                     </Form.Item>
                     <Form.Item label="确认密码" name="password2" validateTrigger='onBlur' labelAlign='left' rules={[
                         ({ getFieldValue }) => ({
@@ -304,7 +265,7 @@ const UserHeader: React.FC<DataType> = (props: any) => {
                             }
                         })
                     ]}>
-                        <Input.Password placeholder="请确认" autoComplete="new-password" maxLength={20} />
+                        <Input.Password placeholder="请确认" autoComplete="new-password" />
                     </Form.Item>
                     <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '0', marginTop: '30px' }}>
                         <Space style={{ marginLeft: "190px" }}>

@@ -1,42 +1,17 @@
 .user_header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     flex-flow: row wrap;
     flex-direction: row;
-
-    :global {
-
-        .ant-btn-default {
-            color: #333 !important;
-            border-color: #d9d9d9 !important;
-        }
-
-        .ant-btn-default:hover {
-            color: #E65E63 !important;
-            border-color: #E65E63 !important;
-
-            path {
-                fill: #E65E63;
-            }
-        }
-    }
-
+    height: 72px;
+    padding-right: 20px;
+    padding-left: 20px;
     form {
         width: 100%;
-
-        >div:nth-of-type(1) {
-            // width: 100%;
-            flex-wrap: wrap;
-            align-items: center;
-            padding: 20px;
-            gap: 25px;
-            margin: 0 !important;
-
-            div:nth-last-of-type(1) {
-                margin-left: auto;
-            }
-        }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 }
 

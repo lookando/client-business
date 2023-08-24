@@ -40,8 +40,6 @@ const AuthorizationMenu: React.FC<PropsType> = (props: any) => {
         if (props.show) {
             const data = JSON.parse(JSON.stringify(props.treeData));
             setTreeData(treeDataRecursion(data));
-        } else {
-            console.log('无数据');
         }
         setSelectIdData([]);
     }, [props.show]);
@@ -62,7 +60,7 @@ const AuthorizationMenu: React.FC<PropsType> = (props: any) => {
     const expandKeys: any = [];
     const selectDataRecursion = (list: any) => {
         list.map((item: any) => {
-            if (item.children) {
+            if (item.children.length > 0) {
                 expandKeys.push(item.id);
                 selectDataRecursion(item.children);
             } else {
@@ -73,14 +71,12 @@ const AuthorizationMenu: React.FC<PropsType> = (props: any) => {
     useEffect(() => {
         //选中的树节点
         const selData = JSON.parse(JSON.stringify(props.selectData));
-        console.log('selData?.menu', selData?.menu);
-        selectDataRecursion(selData?.menu);
+        selectDataRecursion(selData);
         setCheckedKeys(checkKeys);
         setExpandedKeys(expandKeys);
     }, [props.selectData]);
 
     useEffect(() => {
-        console.log('xz', selectIdData);
         if (selectIdData.length == 0) {
             props.setMenuRequest([...expandedKeys, ...checkedKeys]);
         } else {
@@ -95,7 +91,6 @@ const AuthorizationMenu: React.FC<PropsType> = (props: any) => {
                 className={styles.authorlzation}
             >
                 <Tree
-                    showLine
                     checkable
                     autoExpandParent={autoExpandParent}
                     onCheck={onCheck}

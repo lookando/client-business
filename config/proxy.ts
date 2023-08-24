@@ -22,6 +22,15 @@ export default {
   //   },
   // },
 
+  dev: {
+    // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
+    '/api/': {
+      target: 'http://10.80.121.194',//开发地址
+      changeOrigin: true,
+      pathRewrite: { '^/api': '/api' },
+    },
+  },
+
   /**
    * @name 详细的代理配置
    * @doc https://github.com/chimurai/http-proxy-middleware

@@ -1,171 +1,160 @@
-import { login } from '@/services/ant-design-pro/api';
-import {
-  LockOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { FormattedMessage, history,useModel, Helmet } from '@umijs/max';
-import { Alert, message, } from 'antd';
-import Settings from '../../../../config/defaultSettings';
+import { login } from '@/services/digital/api';
+import { UUIDGenerator } from '@/utils/utils';
+import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import React, { useState } from 'react';
+import { FormattedMessage, history, useModel } from 'umi';
+import CaptchaInput from './CaptchaInput';
+import styles from './index.less';
+import { APIRole } from '@/services/digital/role';
+import { APIApplication } from '@/services/digital/application';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { flushSync } from 'react-dom';
-
-
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
+import blackBg from '../../../assets/login/blackBg.png'
+import redCard from '../../../assets/login/redCard.png'
+import { commonAPI } from '@/pages/common';
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
-  const containerClassName = useEmotionCss(() => {
-    return {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      paddingTop:'20vh',
-      overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
-      backgroundSize: '100% 100%',
-    };
-  });
+  const md5 = require('md5');
+  const [ramdomKey, setramdomKey]: any = useState(`${Date.now()}`);
 
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
-      });
-    }
-  };
+  const { setInitialState } = useModel('@@initialState');
 
-  const handleSubmit = async (values: API.LoginParams) => {
-    try {
-      // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
-        const defaultLoginSuccessMessage = '登录成功！'
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
-      }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
-    } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！'
-      console.log(error);
-      message.error(defaultLoginFailureMessage);
+  const { SET_ALL_DICT, SET_LIST_DICT, SET_LIST_APP,SET_BTN_MENU } = useModel('useAuthModels')
+  const [sessionUid] = useState(UUIDGenerator());
+
+  // const intl = useIntl();
+  const handleSubmit = async (values: any) => {
+    values.password = md5(values.password);
+    const { data } = await login({ ...values });
+    if (data) {
+      sessionStorage.setItem('token', data?.accessToken);
+      sessionStorage.setItem('userData', JSON.stringify(data));
     }
+    //获取路由数据
+    // const roleIds: any = [];
+    // data?.roleIds.map((item: any) => {
+    //   roleIds.push(item.id);
+    // });
+    //获取所有字典
+    const allDict = await APIRole.mapAllDict()
+    if (allDict.data) {
+      sessionStorage.setItem('ALLDICT', JSON.stringify(allDict.data));
+      SET_ALL_DICT(allDict.data)
+    }
+    //获取所有字典(简)
+    const listDict = await APIRole.listMap()
+    if (listDict.data) {
+      sessionStorage.setItem('LISTDICT', JSON.stringify(listDict.data));
+      SET_LIST_DICT(listDict.data)
+    }
+    //获取所有应用
+    const listApp = await APIApplication.listAppIdName()
+    if (listApp.data) {
+      sessionStorage.setItem('LISTAPP', JSON.stringify(listApp.data));
+      SET_LIST_APP(listApp.data)
+    }
+    //获取按钮权限
+    const btnMenu = await APIRole.getAuthButton({appId:'compass_auth'})
+    if(btnMenu.data){
+      sessionStorage.setItem('BTNMENU', JSON.stringify(btnMenu.data));
+      SET_BTN_MENU(btnMenu.data)
+    }
+    //获取路由菜单
+    const routerMenu = await APIRole.listRoutes({appId:'compass_auth'})
+    if(routerMenu.data){
+      const tData: any = [];
+      routerMenu.data.map((item: any) => {
+        tData.push(item.path);
+        if (item.children?.length) {
+          item.children.map((i: any) => {
+            tData.push(i.path);
+          });
+        };
+      })
+      sessionStorage.setItem('routerData', JSON.stringify(tData));
+    }
+    if (!history) return;
+    history.push('/welcome');
+    flushSync(() => {
+      setInitialState((s) => ({
+        ...s,
+        currentUser: data,
+      }));
+    });
+    return;
   };
-  const { status, type: loginType } = userLoginState;
 
   return (
-    <div className={containerClassName}>
-      <Helmet>
-        <title>
-          '登录页'
-          - {Settings.title}
-        </title>
-      </Helmet>
-      <div
-        style={{
-          flex: '1',
-          padding: '32px 0',
-        }}
-      >
-        <LoginForm
-          contentStyle={{
-            minWidth: 280,
-            maxWidth: '75vw',
-          }}
-          title="客户业务运营中台"
-          subTitle=' '
-          initialValues={{
-            autoLogin: true,
-          }}
-          onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
-          }}
-        >
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage
-              content='账户或密码错误(admin/ant.design)'
-            />
-          )}
-          {type === 'account' && (
-            <>
-              <ProFormText
-                name="username"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined />,
-                }}
-                placeholder='用户名: admin or user'
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.username.required"
-                        defaultMessage="请输入用户名!"
-                      />
-                    ),
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder='密码: ant.design'
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                        defaultMessage="请输入密码！"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
-          )}
-
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
-          <div
-            style={{
-              marginBottom: 24,
+    <div className={styles.container}>
+      {/* <img src={blackBg} alt='' className={styles.bigImg}></img> */}
+      <div className={styles.content}>
+        <div className={styles.imgBox}>
+          {/* <img src={redCard} alt="" className={styles.smallImg} /> */}
+          <h1 style={{margin:'200px 110px'}}>客户业务运营中台</h1> 
+        </div>
+        <div className={styles.left}>
+          <div className={styles.title}>
+            <div className={styles.font}>用户登录</div>
+          </div>
+          <LoginForm
+            // logo={<img alt="logo" src="/logo.svg" />}
+            // title="Ant Design"
+            // subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
+            initialValues={{
+              autoLogin: true,
+            }}
+            actions={[]}
+            onFinish={async (values) => {
+              await handleSubmit({ ...values, sessionUid } as any).catch(() => {
+                //如果验证错误,刷新ramdomKey重新请求验证码
+                setramdomKey(`${Date.now()}`);
+              });
             }}
           >
-          </div>
-        </LoginForm>
+            <ProFormText
+              name="username"
+              fieldProps={{
+                size: 'large',
+                prefix: <UserOutlined style={{ color: '#ccc', fontSize: '18px' }} />,
+                style: { borderRadius: '4px', width: '300px', height: '45px' },
+              }}
+              placeholder='用户名'
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage
+                      id="pages.login.username.required"
+                      defaultMessage="请输入账号！"
+                    />
+                  ),
+                },
+              ]}
+            />
+            <ProFormText.Password
+              name="password"
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined style={{ color: '#ccc', fontSize: '18px' }} />,
+                style: { borderRadius: '4px', width: '300px', height: '45px' },
+              }}
+              placeholder='密码'
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage
+                      id="pages.login.password.required"
+                      defaultMessage="请输入密码！"
+                    />
+                  ),
+                },
+              ]}
+            />
+            <CaptchaInput sessionUid={sessionUid} ramdomKey={ramdomKey} />
+          </LoginForm>
+
+        </div>
       </div>
     </div>
   );

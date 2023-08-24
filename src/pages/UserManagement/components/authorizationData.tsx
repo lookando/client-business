@@ -47,17 +47,14 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
         props.setSelectVal([]);
     }, [props.isDone])
     useEffect(() => {
-        console.log(props.isCancel)
         props.setSelectVal([]);
     }, [props.isCancel])
-    // console.log('selectVal', selectVal, props.selectDataVal)
     return (
         <div>
             <div
                 className={styles.authorlzation}
             >
                 <Tree
-                    showLine
                     checkable
                     onCheck={onCheck}
                     treeData={treeData}

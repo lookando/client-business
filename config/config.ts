@@ -152,4 +152,14 @@ export default defineConfig({
     strategy: 'normal',
   },
   requestRecord: {},
+  // 打包时去掉日志打印
+  // extraBabelPlugins: ['transform-remove-console'],
+  // 自定义字体
+  chainWebpack(config: any) {
+    config.module
+      .rule('otf')
+      .test(/.otf$/)
+      .use('file-loader')
+      .loader('file-loader')
+  },
 });

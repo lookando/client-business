@@ -2,7 +2,7 @@ import { ProCard, ModalForm, ActionType } from '@ant-design/pro-components';
 import { useState, useEffect, useRef } from 'react';
 import AuthorizationMenu from './authorizationMenu';
 import AuthorizationData from './authorizationData';
-import { APIRole } from '@/services/megrez/role';
+import { APIRole } from '@/services/digital/role';
 import Icon from '@ant-design/icons';
 import { ReactComponent as UpdateIcon } from '@/assets/icons/modal/update.svg';
 
@@ -23,10 +23,6 @@ const CardModal: React.FC<CaradType> = (props: any) => {
     const [isDone, setIsDone] = useState(1);
     const [selectVal, setSelectVal]: any = useState([]);
 
-    useEffect(() => {
-        // console.log('父传的数据', props.dataList, props.treeData, props.selectData, props.record);
-    }, [props.cardModal]);
-
     return (
         <>
             <ModalForm
@@ -42,20 +38,21 @@ const CardModal: React.FC<CaradType> = (props: any) => {
                 onFinish={async () => {
                     //菜单请求
                     const body = {
-                        permissionIdList: menuRequest,
+                        menuIds: menuRequest,
                         roleId: props.requestId,
-                        type: 1,
                     };
                     await APIRole.updateMenu(body);
-                    //数据请求
-                    const params = {
-                        permissionIdList: dataRequest.length ? dataRequest : props.selectDataVal[0] != undefined ? props.selectDataVal : [],
-                        roleId: props.requestId,
-                        type: 3,
-                    };
-                    await APIRole.updateMenu(params);
+                    // //数据请求
+                    // const params = {
+                    //     permissionIdList: dataRequest.length ? dataRequest : props.selectDataVal[0] != undefined ? props.selectDataVal : [],
+                    //     roleId: props.requestId,
+                    //     type: 3,
+                    // };
+                    // await APIRole.updateMenu(params);
                     setIsDone(isDone + 1);
                     props.setCardModal(false);
+                    console.log(menuRequest,props.requestId,'获取确定时间--')
+
                 }}
                 modalProps={{
                     onCancel: () => {
@@ -78,18 +75,18 @@ const CardModal: React.FC<CaradType> = (props: any) => {
                                     setMenuRequest={setMenuRequest}
                                 />
                             },
-                            {
-                                label: `数据权限`,
-                                key: '2',
-                                children: <AuthorizationData
-                                    selectDataVal={props.selectDataVal}
-                                    dataList={props.dataList}
-                                    setDataRequest={setDataRequest}
-                                    isDone={isDone}
-                                    selectVal={selectVal}
-                                    setSelectVal={setSelectVal}
-                                />
-                            },
+                            // {
+                            //     label: `数据权限`,
+                            //     key: '2',
+                            //     children: <AuthorizationData
+                            //         selectDataVal={props.selectDataVal}
+                            //         dataList={props.dataList}
+                            //         setDataRequest={setDataRequest}
+                            //         isDone={isDone}
+                            //         selectVal={selectVal}
+                            //         setSelectVal={setSelectVal}
+                            //     />
+                            // },
                         ],
                         onChange: (key) => {
                             setTab(key);

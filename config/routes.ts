@@ -31,7 +31,7 @@ export default [
   {
     path: '/information-collection',
     name: '个人信息收集管理',
-    icon: 'user|svg',
+    icon: 'info|svg',
     // access: 'normalRouteFilter',
     routes: [
       {

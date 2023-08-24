@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { APIUser } from '@/services/megrez/user';
+import { APIUser } from '@/services/digital/user';
 import { Button, message, Modal, Space, Table, Tree, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ import { ReactComponent as UnfrozenIcon } from '@/assets/icons/button/unfrozen.s
 import { ReactComponent as ResetIcon } from '@/assets/icons/button/reset.svg';
 import { commonAPI } from '@/pages/common';
 import debounce from 'lodash/debounce';
-import { DataNode } from 'antd/es/tree';
+import { history } from 'umi';
 
 interface DataType {
   key: React.Key;
@@ -27,7 +27,6 @@ interface DataType {
 const User: React.FC = () => {
   //md5
   const md5 = require('md5');
-
   const [treeData, setTreeData] = useState<any>([]);
   const [tbleData, setTableData] = useState([]);
   const [TableSomeData, setTableSomeData] = useState<any>({});
@@ -49,20 +48,25 @@ const User: React.FC = () => {
   const [searchParams, setSearchParams] = useState({});
   useEffect(() => {
     // 获取部门树
-    setTreeData(commonAPI.requestDepartment());
+    depTree()
     DidFetchList({
       current: 1,
-      dto: {},
       pageSize: 15,
-      sort: {},
     });
   }, []);
-  const DidFetchList = (data: object) => {
+  const depTree = async () => {
+    //获取部门树
+    const res = await APIUser.fetchDepTree()
+    setTreeData(res.data);
+    console.log(res.data);
+
+  }
+  const DidFetchList = async (data: object) => {
     //获取用户列表 需自行传参
-    APIUser.fetchList(data).then((res) => {
-      setTotal(res.data.total);
-      setTableData(res.data.data);
-    });
+    const res = await APIUser.fetchList(data)
+    setTotal(res.data.total);
+    setTableData(res.data.data);
+
   };
 
   const columns: ColumnsType<DataType> = [
@@ -70,7 +74,6 @@ const User: React.FC = () => {
       title: '用户编号',
       dataIndex: 'username',
       align: 'center',
-      width: 250,
     },
     {
       title: '用户名称',
@@ -79,58 +82,47 @@ const User: React.FC = () => {
     },
     {
       title: '所属组织',
-      dataIndex: 'departmentName',
+      dataIndex: 'deptName',
       align: 'center',
     },
-    // {
-    //   title: '用户类型',
-    //   dataIndex: 'userType',
-    //   render: (dom: string) => <span>{dom == 'SY' ? '系统用户' : dom == 'OA' ? '内部员工' : dom == 'OS' ? '外包商' : dom == 'ST' ? '外包员工' : ''}</span>,
-    //   align: 'center',
-    // },
     {
       title: '用户状态',
       dataIndex: 'status',
-      render: (flag: number) => <span>{flag == 0 ? <Tag color="#FFE9EA" style={{ color: '#DE2930' }}>正常</Tag> : flag == 1 ? <Tag color="#F0F2F5" style={{ color: '#606266' }}>冻结</Tag> : <Tag color="#F0F2F5" style={{ color: '#606266' }}>注销</Tag>}</span>,
+      render: (flag: number) => <span>{flag == 0 ? <Tag color="#FCEBEC" style={{ color: '#DC3A40' }}>正常</Tag> : flag == 1 ? <Tag color="#F2F2F2" style={{ color: '#333333' }}>冻结</Tag> : <Tag color="#F2F2F2" style={{ color: '#333333' }}>注销</Tag>}</span>,
       align: 'center',
     },
     {
       title: '操作',
       dataIndex: 'operation',
       align: 'center',
-      render: (_, record) => (
-        <a
-          style={{
-            color: '#DE2930',
-          }}
-          onClick={() => {
-            authorIzation(record);
-            setUsername(record?.realName);
-          }}
-        >
-          {!record.operation ? '授权' : ''}
-        </a>
-      ),
+      render: (_, record) =>
+        <>
+          {
+            commonAPI.btnAuthority('/auth/user/updateUserRole') ?
+              <a
+                onClick={() => {
+                  authorIzation(record);
+                  setUsername(record?.realName);
+                }}
+              >
+                {record.status === 0 ? '授权' : ''}
+              </a> : <></>
+          }
+        </>
     },
   ];
   //用户查询
   const Finish = async (values: any) => {
     const body: any = {
       current: 1,
-      dto: {
-        realName: values.realName,
-        status: values.status >= 0 ? values.status : '',
-        username: values.username,
-        userType: values.userType,
-        department: branchId,
-      },
+      realName: values.realName,
+      status: values.status >= 0 ? values.status : '',
+      username: values.username,
+      deptId: branchId,
       pageSize: 15,
-      sort: {},
     };
     setSearchParams(body);
-    const res = await APIUser.fetchList(body);
-    setTotal(res.data.total);
-    setTableData(res.data.data);
+    await DidFetchList(body)
     setPages({ current: 1, pageSize: 15 });
     setTableSomeData({});
     setSelectedRow('');
@@ -151,7 +143,7 @@ const User: React.FC = () => {
   //授权
   const authorIzation = async (record: any) => {
     setSomeAuth(record);
-    const res: any = await APIUser.getAuthRoleList(record.id);
+    const res: any = await APIUser.getAuthRoleList({ appId: 'compass_auth', userId: record.id });
     setAuth(res?.data?.auth);
     setUnAuth(res?.data?.unauth);
     setAuthorIzationShow(true);
@@ -165,10 +157,11 @@ const User: React.FC = () => {
       });
     }
     const body: any = {
-      id: someAuth.id,
+      appId: 'compass_auth',
+      userId: someAuth.id,
       roleIds: roleIds,
     };
-    const res = await APIUser.update(body);
+    const res = await APIUser.updateRole(body);
     setAuthorIzationShow(false);
   };
   //授权取消
@@ -182,8 +175,7 @@ const User: React.FC = () => {
       const res = await APIUser.fetchList({
         current: 1,
         pageSize: 15,
-        dto: { status: selStatus },
-        sort: {},
+        status: selStatus,
       });
       setTotal(res.data.total);
       setTableData(res.data.data);
@@ -213,12 +205,12 @@ const User: React.FC = () => {
   //冻结或解冻
   const Freeze = async (values: any) => {
     if (values === '解冻') {
-      await APIUser.updateThaw({
+      await APIUser.updateStatus({
         id: TableSomeData.id,
         status: 0,
       });
     } else {
-      await APIUser.updateFreeze({
+      await APIUser.updateStatus({
         id: TableSomeData.id,
         status: 1,
       });
@@ -226,14 +218,10 @@ const User: React.FC = () => {
     const data: any = {
       current: pages.current,
       pageSize: pages.pageSize,
-      dto: {
-        status: selStatus,
-        userType: selType,
-        realName: inpReal,
-        username: inpUser,
-        department: branchId,
-      },
-      sort: {},
+      status: selStatus,
+      realName: inpReal,
+      username: inpUser,
+      deptId: branchId,
     };
     const res = await APIUser.fetchList(data);
     setTableData(res.data.data);
@@ -250,13 +238,10 @@ const User: React.FC = () => {
       let body = {};
       body = {
         current: 1,
-        dto: {
-          department: info.node.id,
-          status: selStatus !== '' ? Number(selStatus) : '',
-          userType: selType,
-          realName: inpReal,
-          username: inpUser,
-        }
+        deptId: info.node.id,
+        status: selStatus !== '' ? Number(selStatus) : '',
+        realName: inpReal,
+        username: inpUser,
       };
       const res = await APIUser.fetchList(body);
       setTotal(res.data.total);
@@ -269,13 +254,10 @@ const User: React.FC = () => {
       let body = {};
       body = {
         current: 1,
-        dto: {
-          department: '',
-          status: selStatus !== '' ? Number(selStatus) : '',
-          userType: selType,
-          realName: inpReal,
-          username: inpUser,
-        }
+        deptId: '',
+        status: selStatus !== '' ? Number(selStatus) : '',
+        realName: inpReal,
+        username: inpUser,
       };
       const res = await APIUser.fetchList(body);
       setTotal(res.data.total);
@@ -291,13 +273,10 @@ const User: React.FC = () => {
     const body = {
       current: page,
       pageSize: pageSize,
-      dto: {
-        department: branchId,
-        status: selStatus !== '' ? Number(selStatus) : '',
-        realName: inpReal,
-        username: inpUser,
-        userType: selType,
-      }
+      deptId: branchId,
+      status: selStatus !== '' ? Number(selStatus) : '',
+      realName: inpReal,
+      username: inpUser,
     };
     const res = await APIUser.fetchList(body);
     setTotal(res.data.total);
@@ -333,9 +312,7 @@ const User: React.FC = () => {
   const onReset = () => {
     DidFetchList({
       current: 1,
-      dto: {},
       pageSize: 15,
-      sort: {},
     });
     setPages({ current: 1, pageSize: 15 });
     setTableSomeData({});
@@ -373,22 +350,34 @@ const User: React.FC = () => {
   return (
     <div className={styles.userBox}>
       <div className={styles.userLeft}>
+        {/* <Tree
+          treeData={treeData}
+        
+        /> */}
+
         <Tree
           showLine
           onSelect={onSelect}
           defaultExpandedKeys={[]}
           treeData={treeData}
           fieldNames={{
-            title: 'titleabbr',
+            title: 'titleAbbr',
             key: 'id',
             children: 'children',
           }}
+        // style={{
+        //   paddingLeft: '10px',
+        //   // background: '#F7F9FF',
+        //   overflowY: 'scroll',
+        //   height: '773px',
+        //   width: '300px',
+        // }}
         />
       </div>
       <div className={styles.userRight}>
         <div className={styles.rightTop}>
           <UserHeader
-            onfinish={debounce(Finish, 500)}
+            onfinish={Finish}
             someData={TableSomeData}
             addSub={debounce(createUser, 500)}
             setPwd={setPwd}
@@ -400,7 +389,7 @@ const User: React.FC = () => {
             selectType={selectType}
             inpUserName={inpUserName}
             inpRealName={inpRealName}
-            onReset={debounce(onReset, 500)}
+            onReset={onReset}
             setDsab={setDsab}
             modalShow={modalShow}
             setModalShow={setModalShow}
@@ -416,22 +405,23 @@ const User: React.FC = () => {
         <div className={styles.rightBottom}>
           <Space className={styles.user_header_right}>
             <Button type="primary" size='middle' icon={<PlusIcon />} onClick={onAdd}
-            >
+              style={commonAPI.btnAuthority('/auth/user/save') ? {} : { visibility: 'hidden' }}>
               新增
             </Button>
             <Button type="default" size='middle' icon={<FreezeIcon />} onClick={onFreeze} disabled={dsab ? true : !open}
-            >
+              style={commonAPI.btnAuthority('/auth/user/status/update') ? {} : { visibility: 'hidden' }} >
               冻结
             </Button>
             <Button type="default" size='middle' icon={<UnfrozenIcon />} onClick={unFrozen} disabled={dsab ? true : open}
-            >
+              style={commonAPI.btnAuthority('/auth/user/status/update') ? {} : { visibility: 'hidden' }} >
               解冻
             </Button>
             <Button type="default" size='middle' icon={<ResetIcon />} onClick={onResetPwd} disabled={dsab}
-            >
+              style={commonAPI.btnAuthority('/auth/user/password/update') ? {} : { visibility: 'hidden' }} >
               重置密码
             </Button>
           </Space>
+          <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '-26px 0 0 20px' }}>用户管理</div>
           <Table
             className={styles.userTable}
             size="middle"
@@ -441,7 +431,7 @@ const User: React.FC = () => {
               columnTitle: ' ', // 去掉全选
               ...rowSelection,
             }}
-            scroll={{ y: '350px' }}
+            scroll={{ y: '50vh' }}
             columns={columns}
             dataSource={tbleData}
             rowKey={(record) => record.id}

@@ -136,13 +136,14 @@ export default () => {
     <>
       <CommonHeader.Header searchItem={searchItem} ></CommonHeader.Header>
       <div className={styles.rightItem}>   
-        <div className='primaryTitle' style={{position:'absolute',zIndex:'999',margin:'24px 0 0 20px'}}>历史统计</div>
+        <div className='primaryTitle' style={{position:'absolute',zIndex:'999',margin:'26px 0 0 20px'}}>历史统计</div>
         <EditableProTable<DataSourceType>
           className='tableStyle'
-          style={{ marginTop: "70px" }}
+          style={{ marginTop: "66px" }}
           rowKey="id"
           scroll={{
             x: 960,
+            y: 360
           }}
           recordCreatorProps={
             position !== 'hidden'

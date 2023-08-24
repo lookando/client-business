@@ -10,6 +10,9 @@ import { history } from 'umi';
 import { Breadcrumb, Button, Form, Pagination } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { APIInfocollection } from '@/services/client/infocollection';
+import Icon from '@ant-design/icons';
+import { ReactComponent as Nosave } from '@/assets/icons/button/unsave.svg';
+import { ReactComponent as Edit } from '@/assets/icons/button/edit.svg';
 
 type DataSourceType = {
   id: React.Key;
@@ -112,6 +115,7 @@ export default () => {
   return (
     <>
       <div className={styles.mainItem}>
+
         <div className={styles.topItem} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Breadcrumb
             style={{ marginLeft: '15px' }}
@@ -130,7 +134,8 @@ export default () => {
         </div>
       </div>
       <div className={styles.rightItem}>
-        <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '30px 0 0 20px' }}>类别维护</div>
+        <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '24px 0 0 20px' }}>收集场景表 {isModify ? <span style={{ fontSize: '13px', color: '#DE2930' }}><span style={{ padding: '1px 6px', backgroundColor: '#fbe4e5', }} >编辑中</span></span> : ''}</div>
+        {/* <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '30px 0 0 20px' }}>类别维护</div> */}
         <EditableProTable<DataSourceType>
           className='tableStyle'
           rowKey="id"
@@ -140,6 +145,8 @@ export default () => {
           toolBarRender={() => {
             return [
               <>
+                {isModify ? <div style={{position:'relative',color:'#DE2930',fontSize:"14px"}}><span style={{position:"absolute",top:'1px',left:'-18px'}}><Nosave/></span>数据变动，未保存</div> : ''}
+
                 <Button
                   type="primary"
                   key="save"
@@ -163,6 +170,7 @@ export default () => {
                     }
                   }}
                 >
+                  <Icon component={Edit}></Icon>
                   {isModify ? '保存' : '编辑'}
                 </Button>
                 {isModify ? <Button type="primary" htmlType="submit" size="middle" onClick={() => {
@@ -227,7 +235,7 @@ export default () => {
             deletePopconfirmMessage: false,
           }}
         />
-        <Pagination  className={styles.pagination} disabled={pagination} current={current} onChange={onChange} defaultCurrent={1} total={total} showSizeChanger showQuickJumper defaultPageSize={pageSize} />
+        <Pagination className={styles.pagination} disabled={pagination} current={current} onChange={onChange} defaultCurrent={1} total={total} showSizeChanger showQuickJumper defaultPageSize={pageSize} />
       </div>
     </>
   );

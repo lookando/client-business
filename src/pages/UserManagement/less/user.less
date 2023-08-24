@@ -1,15 +1,16 @@
 .userBox {
   width: 100%;
-  height: calc(100vh - 76px);
+  height: calc(100vh - 70px);
   display: flex;
 }
 
 .userLeft {
+
   width: 250px;
   height: 100%;
   background: #fff;
   overflow: scroll;
-  padding: 20px;
+  padding: 16px;
 
   :global {
     .ant-tree-list {
@@ -48,20 +49,25 @@
   flex: 1;
   height: 100%;
   margin-left: 10px;
-  background: #ededed;
+  background: #FFFFFF;
   min-width: 1056px;
 
   .rightTop,
   .rightBottom {
     background: #FFFFFF;
   }
+
+  .rightTop {
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.09);
+  }
+
   form>div>div:nth-last-of-type(1)>div {
     margin-right: 0;
   }
 
   .rightBottom {
     margin-top: 10px;
-    height: calc(100% - 82px);
+    height: calc(100% - 87px);
     overflow: auto;
 
     :global(.ant-space) {
@@ -86,19 +92,15 @@
       margin: 0 20px;
       // border-bottom: 1px solid #ebeef5;
       border-radius: 0 !important;
-
-
       .ant-table-header {
         .ant-table-cell {
           color: #333;
         }
-
         >table>thead>tr:first-child>*:first-child {
           border-start-start-radius: 0;
         }
       }
     }
-
     .ant-table-header {
       border-radius: 0 !important;
     }
@@ -145,3 +147,4 @@
     }
   }
 }
+

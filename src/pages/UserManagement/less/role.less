@@ -1,14 +1,14 @@
 .roleBox {
   width: 100%;
-  height: 100%;
-
+  height: 100vh;
+  // background-color: pink;
+  
 }
 
 .roleTable {
-  flex: 1;
+
   background-color: #fff;
   padding: 20px;
-
   :global {
 
     .ant-table,
@@ -76,5 +76,17 @@
     >div {
       margin-right: 0 !important;
     }
+  }
+}
+
+.bottomContain{
+  background-color: #fff;
+  height: calc(100vh - 152px);
+}
+
+
+:global{
+  .ant-pro-table-list-toolbar-containe{
+    padding-block: 0 16px !important;
   }
 }

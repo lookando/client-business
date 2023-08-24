@@ -31,7 +31,6 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
     const [Data2, setData2] = useState<any>([]);
     const [waitData, setWaitData] = useState<any>([]);
     const [finishData, setFinishData] = useState<any>([]);
-
     const [selectedRowKeysLeft, setSelectedRowKeysLeft]: any = useState([]);
     const [selectedRowKeysRight, setSelectedRowKeysRight]: any = useState([]);
     useEffect(() => {
@@ -85,9 +84,9 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
         const list = unique(fData);
         setData2(list2);
         setData(list);
-        setWaitData([]);
         setSelectedRowKeysLeft([]);
         setSelectedRowKeysRight([]);
+        setFinishData([])
     };
     //移动到已分配
     const goToFnish = () => {
@@ -107,9 +106,9 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
         const list = unique(fData);
         setData2(list2);
         setData(list);
-        setFinishData([]);
         setSelectedRowKeysLeft([]);
         setSelectedRowKeysRight([]);
+        setWaitData([])
     };
     //数组去重
     function unique(arr: any) {
@@ -127,12 +126,12 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
     const columns: ColumnsType<DataType> = [
         {
             title: '角色编号',
-            dataIndex: 'name',
+            dataIndex: 'code',
             align: 'center'
         },
         {
             title: '角色名称',
-            dataIndex: 'brief',
+            dataIndex: 'name',
             align: 'center'
         },
     ];
@@ -163,18 +162,20 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
                             dataSource={Data2}
                             pagination={false}
                             rowKey={(record) => record?.id}
-                            scroll={{ y: 240 }}
+                            scroll={{ y: 160 }}
                             size='small'
                         />
                     </Card>
-                    <div>
-                        <Button icon={<LeftOutlined />} type="primary" ghost size='small'
-                            onClick={() => {
-                                goToWait();
-                            }}></Button>
-                        <Button icon={<RightOutlined />} type="primary" ghost size='small'
+                    <div className={styles.btnbox}>
+                        
+                        <Button icon={<RightOutlined />} type="primary" ghost size='small' className={styles.leftBtn}
                             onClick={() => {
                                 goToFnish();
+                               
+                            }}></Button>
+                        <Button icon={<LeftOutlined />} type="primary" ghost size='small' className={styles.rightBtn}
+                            onClick={() => {
+                                 goToWait();
                             }}></Button>
                     </div>
                     <Card title={` 已分配角色(${Data?.length})`} size="small"
@@ -189,7 +190,7 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
                             dataSource={Data}
                             pagination={false}
                             rowKey={(record) => record?.id}
-                            scroll={{ y: 240 }}
+                            scroll={{ y: 160 }}
                             className={styles.alreadyRoleTable}
                             size='small'
                         />

@@ -1,0 +1,133 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: auto;
+    // background: @layout-body-background;
+}
+
+.lang {
+    width: 100%;
+    height: 40px;
+    line-height: 44px;
+    text-align: right;
+
+    :global(.ant-dropdown-trigger) {
+        margin-right: 24px;
+    }
+}
+
+// .content {
+//     flex: 1;
+//     padding: 32px 0;
+// }
+
+@media (min-width: @screen-md-min) {
+    .container {
+        width: 100%;
+        height: 100%;
+        background-color: #F4F9FF;
+        position: relative;
+
+        .content {
+            display: flex;
+            width: 960px;
+            height: 570px;
+            position: relative;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            border-radius: 8px;
+            background-color: #fff !important;
+            box-shadow: 6px 9px 39px 0px rgba(34, 65, 125, 0.21);
+
+            .imgBox {
+                width: 50%;
+                height: 100%;
+            }
+
+            .left {
+                flex: 50%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+
+                .title {
+                    // margin-top: 115px;
+                    margin: 115px 0 0 57px;
+                    padding-left: 32px;
+
+                    .font {
+                        color: #4d4d4d;
+                        font-weight: 600;
+                        font-size: 28px;
+                        font-family: PingFangSC-Medium;
+                        letter-spacing: 0;
+                    }
+                }
+
+                >div:nth-child(2) {
+                    // margin: 19px 21px 0 auto;
+                    margin: 20px 0 0 60px;
+                }
+            }
+        }
+    }
+}
+
+.icon {
+    margin-left: 8px;
+    color: rgba(0, 0, 0, 0.2);
+    font-size: 24px;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: color 0.3s;
+
+    &:hover {
+        color: @primary-color;
+    }
+}
+
+.bigImg {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.smallImg {
+    height: 100%;
+}
+
+//登录界面登录按钮样式
+:global {
+    .ant-btn-lg {
+        margin-top: 34px;
+        width: 300px !important;
+        height: 45px;
+        background: linear-gradient(to right, #7CA3EF, #5283E0);
+        border-radius: 4px !important;
+
+        >span {
+            font-size: 18px;
+        }
+    }
+
+    .ant-input-group.ant-input-group-compact {
+        display: flex;
+        justify-content: space-between;
+        width: 300px;
+        border: none;
+    }
+    .ant-pro-form-login-main {
+        .ant-form-item {
+            margin-bottom: 10px !important;
+        }
+      }
+   
+
+}
