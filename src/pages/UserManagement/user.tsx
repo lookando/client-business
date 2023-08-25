@@ -27,6 +27,7 @@ interface DataType {
 const User: React.FC = () => {
   //md5
   const md5 = require('md5');
+  const [loading, setLoading] = useState<any>(true);
   const [treeData, setTreeData] = useState<any>([]);
   const [tbleData, setTableData] = useState([]);
   const [TableSomeData, setTableSomeData] = useState<any>({});
@@ -53,6 +54,7 @@ const User: React.FC = () => {
       current: 1,
       pageSize: 15,
     });
+    setLoading(false)
   }, []);
   const depTree = async () => {
     //获取部门树
@@ -431,6 +433,7 @@ const User: React.FC = () => {
               columnTitle: ' ', // 去掉全选
               ...rowSelection,
             }}
+            loading={loading}
             scroll={{ y: '50vh' }}
             columns={columns}
             dataSource={tbleData}

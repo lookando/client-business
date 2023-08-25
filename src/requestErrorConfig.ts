@@ -64,14 +64,7 @@ export const errorConfig: RequestConfig = {
       return { ...config, headers: authHeader };
     },
   ],
-  // requestInterceptors: [
-  //   (config: RequestOptions) => {
-  //     // 拦截请求配置，进行个性化处理。
-  //     const url = config?.url?.concat('?token = 123');
-  //     return { ...config, url };
-  //   },
-  // ],
-
+  
   // 响应拦截器
   responseInterceptors: [
     (response) => {
