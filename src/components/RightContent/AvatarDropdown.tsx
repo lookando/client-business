@@ -15,7 +15,7 @@ import Icon from '@ant-design/icons';
 import { Modal, Form, Input, Space, Button, message } from 'antd';
 import { ReactComponent as UpdateIcon } from '@/assets/icons/modal/update.svg';
 import { APIUser } from '@/services/digital/user';
-import avt from'@/assets/icons/avt.svg'
+import avt from '@/assets/icons/avt.svg'
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -39,7 +39,7 @@ const Name = () => {
     };
   });
 
-  return <span style={{color:'#fff'}} className={`${nameClassName} anticon`}>{currentUser?.realName}</span>;
+  return <span style={{ color: '#fff' }} className={`${nameClassName} anticon`}>{currentUser?.realName}</span>;
 };
 
 // const AvatarLogo = () => {
@@ -210,10 +210,11 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       <Modal title={
         <div style={{ marginBottom: '30px' }}>
           <Icon component={UpdateIcon} style={{ fontSize: '22px' }} />
-          <span style={{ marginLeft: '7px', fontSize: '22px', color: '#303133' }}>重置密码</span>
+          <span style={{ marginLeft: '7px', fontSize: '18px', color: '#303133' }}>重置密码</span>
         </div>
-      } open={PwdmodalShow} onCancel={handleCancel} width={550} footer={false} centered={true}>
+      } open={PwdmodalShow} onCancel={handleCancel} width={480} footer={false} centered={true}>
         <Form
+          style={{ margin: '0 20px' }}
           form={reform}
           name="setPwd"
           onFinish={resetPwd}
@@ -223,7 +224,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
           <Form.Item label="密码" name="password1" validateTrigger='onBlur' rules={[{ pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/, message: '密码8-20位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符', }]} labelAlign='left'>
             <Input.Password placeholder="请输入" autoComplete="new-password" />
           </Form.Item>
-          <Form.Item label="确认密码" name="password2" validateTrigger='onBlur' labelAlign='left' rules={[
+          <Form.Item label="确认密码" name="password2" style={{ marginTop: '20px' }} validateTrigger='onBlur' labelAlign='left' rules={[
             ({ getFieldValue }) => ({
               validator(rule, value) {
                 if (!value || getFieldValue('password1') === value) {

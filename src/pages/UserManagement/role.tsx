@@ -10,7 +10,7 @@ import styles from './less/role.less';
 import CardModal from './components/cardModal';
 import Icon from '@ant-design/icons';
 import { ReactComponent as WarningIcon } from '@/assets/icons/modal/warning.svg';
-import { ReactComponent as ModifyIcon } from '@/assets/icons/modal/modify.svg';
+import { ReactComponent as UpdateIcon } from '@/assets/icons/modal/update4.svg';
 
 import { ReactComponent as CreateIcon } from '@/assets/icons/modal/create.svg';
 import { ReactComponent as PlusIcon } from '@/assets/icons/button/plus.svg';
@@ -214,7 +214,7 @@ const Role: React.FC = () => {
                     </div>
                 </Form>
             </div>
-            <div className='primaryTitle' style={{ position: 'absolute', fontWeight:'600',zIndex: '999', margin: '29px 0 0 20px' }}>角色管理</div>
+            <div className='primaryTitle' style={{ position: 'absolute', fontWeight: '600', zIndex: '999', margin: '29px 0 0 20px' }}>角色管理</div>
             <div className={styles.bottomContain}>
                 <ProTable<API.PageParams>
                     className={styles.roleTable}
@@ -286,18 +286,19 @@ const Role: React.FC = () => {
 
             <Modal title={
                 <div style={{ marginBottom: '30px' }}>
-                    <Icon component={modalTitle === '新增角色' ? CreateIcon : ModifyIcon} style={{ fontSize: '22px' }} />
+                    {modalTitle === '新增角色' ? <Icon component={CreateIcon} style={{ fontSize: '22px' }} /> : <Icon component={UpdateIcon} style={{ fontSize: '22px' }} />}
+                    {/* <Icon component={modalTitle === '新增角色' ? CreateIcon : ModifyIcon} style={{ fontSize: '22px' }} /> */}
                     <span style={{ marginLeft: '7px', fontSize: '18px', color: '#303133' }}>{modalTitle}</span>
                 </div>
             } open={modalOpen} onCancel={handleCancel} width={420} footer={false} centered={true}>
-                <Form name="basic" style={{marginLeft:'10px'}} onFinish={debounce(onAddFinish, 500)} autoComplete="off" colon={false} form={form}>
-                    <Form.Item label="角色编号"  name="code" rules={[{ required: true }]}>
-                        <Input placeholder="请输入" style={{width:'250px',marginBottom:'20px'}} disabled={modalTitle === '新增角色' ? false : true} />
+                <Form name="basic" style={{ marginLeft: '10px' }} onFinish={debounce(onAddFinish, 500)} autoComplete="off" colon={false} form={form}>
+                    <Form.Item label="角色编号" name="code" rules={[{ required: true }]}>
+                        <Input placeholder="请输入" style={{ width: '250px', marginBottom: '20px' }} disabled={modalTitle === '新增角色' ? false : true} />
                     </Form.Item>
                     <Form.Item label="角色名称" name="name" rules={[{ required: true }]}>
-                        <Input placeholder="请输入名称" style={{width:'250px'}}/>
+                        <Input placeholder="请输入名称" style={{ width: '250px' }} />
                     </Form.Item>
-                    <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginTop: '25px',marginBottom:"-20px" }} >
+                    <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginTop: '25px', marginBottom: "-20px" }} >
                         <Space>
                             <Button onClick={handleCancel}>取消</Button>
                             <Button type="primary" htmlType="submit">
@@ -310,8 +311,8 @@ const Role: React.FC = () => {
 
             <Modal
                 title={
-                    <div style={{ marginBottom: '30px',position:'relative' }}>
-                        <Icon component={WarningIcon} style={{ fontSize: '22px' ,position:'absolute',top:'3px'}} />
+                    <div style={{ marginBottom: '30px', position: 'relative' }}>
+                        <Icon component={WarningIcon} style={{ fontSize: '22px', position: 'absolute', top: '3px' }} />
                         <span style={{ marginLeft: '27px', fontSize: '18px', color: '#333333' }}>删除角色</span>
                     </div>
                 }
@@ -320,7 +321,7 @@ const Role: React.FC = () => {
                     color: '#333',
                     fontWeight: '400',
                     fontSize: '14px',
-                    marginLeft:'17px',
+                    marginLeft: '17px',
                     marginTop: '30px',
                 }}>确认删除【{record['name']}】角色？
                 </div>

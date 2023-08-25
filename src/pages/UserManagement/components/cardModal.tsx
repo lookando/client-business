@@ -4,7 +4,7 @@ import AuthorizationMenu from './authorizationMenu';
 import AuthorizationData from './authorizationData';
 import { APIRole } from '@/services/digital/role';
 import Icon from '@ant-design/icons';
-import { ReactComponent as UpdateIcon } from '@/assets/icons/modal/update.svg';
+import { ReactComponent as UpdateIcon } from '@/assets/icons/modal/update3.svg';
 
 interface CaradType {
     cardModal: any,

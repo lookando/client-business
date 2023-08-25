@@ -5,7 +5,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import styles from '../less/userAuthorlzation.less';
 import Icon from '@ant-design/icons';
-import { ReactComponent as UpdateIcon } from '@/assets/icons/modal/update.svg';
+import { ReactComponent as Modify } from '@/assets/icons/modal/update2.svg';
 
 interface PropsType {
     show: boolean;
@@ -139,7 +139,7 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
         <div>
             <Modal
                 title={<div>
-                    <Icon component={UpdateIcon} style={{ fontSize: '22px' }} />
+                    <Icon component={Modify} style={{ fontSize: '22px', }} />
                     <span style={{ marginLeft: '7px', fontSize: '22px', color: '#303133' }}>授权-用户({props.username})</span>
                 </div>}
                 open={authorIzationShow}
@@ -167,15 +167,15 @@ const AuthorIzation: React.FC<PropsType> = (props: any) => {
                         />
                     </Card>
                     <div className={styles.btnbox}>
-                        
+
                         <Button icon={<RightOutlined />} type="primary" ghost size='small' className={styles.leftBtn}
                             onClick={() => {
                                 goToFnish();
-                               
+
                             }}></Button>
                         <Button icon={<LeftOutlined />} type="primary" ghost size='small' className={styles.rightBtn}
                             onClick={() => {
-                                 goToWait();
+                                goToWait();
                             }}></Button>
                     </div>
                     <Card title={` 已分配角色(${Data?.length})`} size="small"

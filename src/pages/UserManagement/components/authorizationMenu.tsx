@@ -92,6 +92,7 @@ const AuthorizationMenu: React.FC<PropsType> = (props: any) => {
             >
                 <Tree
                     checkable
+                    showLine
                     autoExpandParent={autoExpandParent}
                     onCheck={onCheck}
                     onExpand={onExpand}
