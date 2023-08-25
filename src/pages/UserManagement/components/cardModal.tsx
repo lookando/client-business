@@ -75,18 +75,18 @@ const CardModal: React.FC<CaradType> = (props: any) => {
                                     setMenuRequest={setMenuRequest}
                                 />
                             },
-                            // {
-                            //     label: `数据权限`,
-                            //     key: '2',
-                            //     children: <AuthorizationData
-                            //         selectDataVal={props.selectDataVal}
-                            //         dataList={props.dataList}
-                            //         setDataRequest={setDataRequest}
-                            //         isDone={isDone}
-                            //         selectVal={selectVal}
-                            //         setSelectVal={setSelectVal}
-                            //     />
-                            // },
+                            {
+                                label: `数据权限`,
+                                key: '2',
+                                children: <AuthorizationData
+                                    selectDataVal={props.selectDataVal}
+                                    // dataList={props.dataList}
+                                    setDataRequest={setDataRequest}
+                                    isDone={isDone}
+                                    selectVal={selectVal}
+                                    setSelectVal={setSelectVal}
+                                />
+                            },
                         ],
                         onChange: (key) => {
                             setTab(key);

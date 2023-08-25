@@ -39,7 +39,7 @@ export default () => {
   const [tableForm] = Form.useForm();
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [dataSource, setDataSource] = useState();
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(5);
   const [position, setPosition] = useState('hidden');
   const [total, setTotal] = useState<number>()
   const [pagination, setPagination] = useState(false);
@@ -58,12 +58,10 @@ export default () => {
       title: '信息ID',
       dataIndex: 'title',
       readonly: true,
-      width: '15%',
     },
     {
       title: '信息名称',
       dataIndex: 'readonly',
-      width: '15%',
     },
     {
       title: '信息类别',
@@ -80,12 +78,10 @@ export default () => {
       title: '信息ID',
       dataIndex: 'title',
       readonly: true,
-      width: '15%',
     },
     {
       title: '信息名称',
       dataIndex: 'readonly',
-      width: '15%',
     },
     {
       title: '信息类别',
@@ -130,7 +126,7 @@ export default () => {
     <>
       <CommonHeader.Header searchItem={searchItem} ></CommonHeader.Header>
       <div className={styles.rightItem}>
-        <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '24px 0 0 20px' }}>信息分类表 {isModify ? <span style={{ fontSize: '13px',  color: '#DE2930' }}><span style={{  padding: '1px 6px', backgroundColor: '#fbe4e5',  }} >编辑中</span></span> : ''}</div>
+        <div className='primaryTitle' style={{ position: 'absolute', fontWeight:'600', zIndex: '999', margin: '24px 0 0 20px' }}>信息分类表 {isModify ? <span style={{ fontSize: '13px',  color: '#DE2930' }}><span style={{  padding: '1px 6px', backgroundColor: '#fbe4e5',  }} >编辑中</span></span> : ''}</div>
         <EditableProTable
           className='tableStyle'
           // name='table'//这个属性要看源码
@@ -138,7 +134,7 @@ export default () => {
           // key='id'
           scroll={{
             x: 960,
-            y: 420
+            y: 370
           }}
           editableFormRef={editableFormRef}
           actionRef={actionRef}

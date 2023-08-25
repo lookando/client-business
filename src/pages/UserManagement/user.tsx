@@ -421,7 +421,7 @@ const User: React.FC = () => {
               重置密码
             </Button>
           </Space>
-          <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '-26px 0 0 20px' }}>用户管理</div>
+          <div className='primaryTitle' style={{ position: 'absolute',fontWeight:'600',zIndex: '999', margin: '-26px 0 0 20px' }}>用户管理</div>
           <Table
             className={styles.userTable}
             size="middle"

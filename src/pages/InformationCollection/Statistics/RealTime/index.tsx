@@ -37,7 +37,7 @@ export default () => {
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>([]);
   const [position, setPosition] = useState('hidden');
   const [pagination, setPagination] = useState(false);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState<number>()
   const [current, setCurrent] = useState(1);
   const columns: ProColumns<DataSourceType>[] = [
@@ -102,7 +102,7 @@ export default () => {
     <>
       <CommonHeader.Header searchItem={searchItem} ></CommonHeader.Header>
       <div className={styles.rightItem}>   
-        <div className='primaryTitle' style={{position:'absolute',zIndex:'999',margin:'26px 0 0 20px'}}>实时统计</div>
+        <div className='primaryTitle' style={{position:'absolute',fontWeight:'600',zIndex:'999',margin:'26px 0 0 20px'}}>实时统计</div>
         <EditableProTable<DataSourceType>
           className='tableStyle'
           style={{ marginTop: "66px" }}

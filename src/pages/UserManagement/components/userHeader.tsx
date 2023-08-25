@@ -5,7 +5,7 @@ import Icon from '@ant-design/icons';
 import { ReactComponent as CreateIcon } from '@/assets/icons/modal/create.svg';
 import { ReactComponent as WarningIcon } from '@/assets/icons/modal/warning.svg';
 import { ReactComponent as QuestionIcon } from '@/assets/icons/modal/question.svg';
-import { ReactComponent as UpdateIcon } from '@/assets/icons/modal/update.svg';
+import { ReactComponent as Modify } from '@/assets/icons/modal/modify.svg';
 
 interface DataType {
     onfinish?: any;
@@ -159,7 +159,7 @@ const UserHeader: React.FC<DataType> = (props: any) => {
             <Modal title={
                 <div style={{ marginBottom: '30px' }}>
                     <Icon component={CreateIcon} style={{ fontSize: '22px' }} />
-                    <span style={{ marginLeft: '7px', fontSize: '22px', color: '#303133' }}>新增用户</span>
+                    <span style={{ marginLeft: '7px', fontSize: '18px', color: '#303133' }}>新增用户</span>
                 </div>
             }
                 open={props.isModalOpen}
@@ -177,10 +177,10 @@ const UserHeader: React.FC<DataType> = (props: any) => {
                     <Form.Item label="用户编号" name="username" rules={[{ required: true }]}>
                         <Input placeholder="请输入" />
                     </Form.Item>
-                    <Form.Item label="用户名称" name="realName" rules={[{ required: true }]}>
+                    <Form.Item label="用户名称" name="realName" style={{margin:'20px 0'}} rules={[{ required: true }]}>
                         <Input placeholder="请输入名称" />
                     </Form.Item>
-                    <Form.Item label="所属组织" name="branchId" rules={[{ required: true }]}>
+                    <Form.Item label="所属组织" name="branchId" style={{margin:'20px 0'}} rules={[{ required: true }]}>
                         <TreeSelect
                             showSearch
                             filterTreeNode={filterTreeNode}
@@ -213,17 +213,18 @@ const UserHeader: React.FC<DataType> = (props: any) => {
             <Modal title={
                 <div style={{ marginBottom: '30px' }}>
                     <Icon component={props.modalTitle == '冻结' ? WarningIcon : QuestionIcon} style={{ fontSize: '22px' }} />
-                    <span style={{ marginLeft: '7px', fontSize: '22px', color: '#303133' }}>{props.modalTitle}</span>
+                    <span style={{ marginLeft: '7px', fontSize: '18px', color: '#333' }}>{props.modalTitle}</span>
                 </div>
             }
                 open={props.modalShow}
                 onCancel={handleCancel}
-                width={550}
+                width={480}
                 footer={false}
                 centered={true}>
                 <div style={{
-                    color: '#606266',
-                    fontSize: '18px',
+                    color: '#333',
+                    fontSize: '14px',
+                    marginLeft:'20px',
                     marginTop: '30px',
                     marginBottom: '30px',
                 }}>是否{props.modalTitle}【{props.someData?.username}】账户？
@@ -241,11 +242,12 @@ const UserHeader: React.FC<DataType> = (props: any) => {
             </Modal>
             <Modal title={
                 <div style={{ marginBottom: '30px' }}>
-                    <Icon component={UpdateIcon} style={{ fontSize: '22px' }} />
+                    <Icon component={Modify} style={{ fontSize: '22px' }} />
                     <span style={{ marginLeft: '7px', fontSize: '22px', color: '#303133' }}>重置密码</span>
                 </div>
-            } open={props.PwdmodalShow} onCancel={handleCancel} width={550} footer={false} centered={true}>
+            } open={props.PwdmodalShow} onCancel={handleCancel} width={480} footer={false} centered={true}>
                 <Form
+                    style={{width:'380px',marginLeft:'25px'}}
                     form={reform}
                     name="setPwd"
                     onFinish={resetPwd}
@@ -255,7 +257,7 @@ const UserHeader: React.FC<DataType> = (props: any) => {
                     <Form.Item label="密码" name="password1" validateTrigger='onBlur' labelAlign='left' rules={[{ pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/, message: '密码8-20位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符', }]}>
                         <Input.Password placeholder="请输入" autoComplete="new-password" />
                     </Form.Item>
-                    <Form.Item label="确认密码" name="password2" validateTrigger='onBlur' labelAlign='left' rules={[
+                    <Form.Item label="确认密码" style={{marginTop:'20px'}} name="password2" validateTrigger='onBlur' labelAlign='left' rules={[
                         ({ getFieldValue }) => ({
                             validator(rule, value) {
                                 if (!value || getFieldValue('password1') === value) {

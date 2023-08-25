@@ -10,7 +10,7 @@ import styles from './less/role.less';
 import CardModal from './components/cardModal';
 import Icon from '@ant-design/icons';
 import { ReactComponent as WarningIcon } from '@/assets/icons/modal/warning.svg';
-import { ReactComponent as UpdateIcon } from '@/assets/icons/modal/update.svg';
+import { ReactComponent as ModifyIcon } from '@/assets/icons/modal/modify.svg';
 
 import { ReactComponent as CreateIcon } from '@/assets/icons/modal/create.svg';
 import { ReactComponent as PlusIcon } from '@/assets/icons/button/plus.svg';
@@ -81,13 +81,13 @@ const Role: React.FC = () => {
             title: '角色编号',
             dataIndex: 'code',
             align: 'center',
-            width: '360px'
+            width: '420px'
         },
         {
             title: '角色名称',
             dataIndex: 'name',
             align: 'center',
-            width: '360px'
+            width: '410px'
         },
         {
             title: '操作',
@@ -111,7 +111,7 @@ const Role: React.FC = () => {
                         commonAPI.btnAuthority('/auth/role/update') ?
                             <a onClick={() => {
                                 setModalOpen(true);
-                                setModalTitle('修改');
+                                setModalTitle('修改角色');
                                 setRecord(record);
                                 form.setFieldsValue(record)
                             }}>
@@ -145,7 +145,7 @@ const Role: React.FC = () => {
     };
     //添加
     const onAddFinish = async (values: any) => {
-        if (modalTitle === '新增') {
+        if (modalTitle === '新增角色') {
             try {
                 values.appId = 'compass_auth';
                 const res = await APIRole.create(values);
@@ -159,7 +159,7 @@ const Role: React.FC = () => {
                 setErrorModal(true)
                 form.resetFields();
             }
-        } else if (modalTitle === '修改') {
+        } else if (modalTitle === '修改角色') {
             const res = await APIRole.updateData({ appId: 'compass_auth', name: values.name, code: values.code, id: record.id })
             if (res.success) {
                 setModalOpen(false);
@@ -214,7 +214,7 @@ const Role: React.FC = () => {
                     </div>
                 </Form>
             </div>
-            <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '29px 0 0 20px' }}>角色管理</div>
+            <div className='primaryTitle' style={{ position: 'absolute', fontWeight:'600',zIndex: '999', margin: '29px 0 0 20px' }}>角色管理</div>
             <div className={styles.bottomContain}>
                 <ProTable<API.PageParams>
                     className={styles.roleTable}
@@ -238,14 +238,14 @@ const Role: React.FC = () => {
                         <Button size="middle" type="primary" icon={<PlusIcon />}
                             onClick={() => {
                                 setModalOpen(true);
-                                setModalTitle('新增');
+                                setModalTitle('新增角色');
                             }}
                             style={commonAPI.btnAuthority('/auth/role/save') ? {} : { visibility: 'hidden' }}
                         > 新增 </Button>,
                         <Button size="middle" type="default" icon={<DeleteIcon />}
                             onClick={() => {
                                 setModalShow(true);
-                                setModalTitle('删除');
+                                setModalTitle('删除角色');
                             }}
                             disabled={delShow}
                             style={commonAPI.btnAuthority('/auth/role/delete/{id}') ? {} : { visibility: 'hidden' }}
@@ -286,18 +286,18 @@ const Role: React.FC = () => {
 
             <Modal title={
                 <div style={{ marginBottom: '30px' }}>
-                    <Icon component={modalTitle === '新增' ? CreateIcon : UpdateIcon} style={{ fontSize: '22px' }} />
-                    <span style={{ marginLeft: '7px', fontSize: '22px', color: '#303133' }}>{modalTitle}</span>
+                    <Icon component={modalTitle === '新增角色' ? CreateIcon : ModifyIcon} style={{ fontSize: '22px' }} />
+                    <span style={{ marginLeft: '7px', fontSize: '18px', color: '#303133' }}>{modalTitle}</span>
                 </div>
-            } open={modalOpen} onCancel={handleCancel} width={450} footer={false} centered={true}>
-                <Form name="basic" onFinish={debounce(onAddFinish, 500)} autoComplete="off" colon={false} form={form}>
-                    <Form.Item label="角色编号" name="code" rules={[{ required: true }]}>
-                        <Input placeholder="请输入" disabled={modalTitle === '新增' ? false : true} />
+            } open={modalOpen} onCancel={handleCancel} width={420} footer={false} centered={true}>
+                <Form name="basic" style={{marginLeft:'10px'}} onFinish={debounce(onAddFinish, 500)} autoComplete="off" colon={false} form={form}>
+                    <Form.Item label="角色编号"  name="code" rules={[{ required: true }]}>
+                        <Input placeholder="请输入" style={{width:'250px',marginBottom:'20px'}} disabled={modalTitle === '新增角色' ? false : true} />
                     </Form.Item>
                     <Form.Item label="角色名称" name="name" rules={[{ required: true }]}>
-                        <Input placeholder="请输入名称" />
+                        <Input placeholder="请输入名称" style={{width:'250px'}}/>
                     </Form.Item>
-                    <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '0', marginTop: '30px' }} >
+                    <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginTop: '25px',marginBottom:"-20px" }} >
                         <Space>
                             <Button onClick={handleCancel}>取消</Button>
                             <Button type="primary" htmlType="submit">
@@ -310,18 +310,19 @@ const Role: React.FC = () => {
 
             <Modal
                 title={
-                    <div style={{ marginBottom: '30px' }}>
-                        <Icon component={WarningIcon} style={{ fontSize: '22px' }} />
-                        <span style={{ marginLeft: '7px', fontSize: '22px', color: '#303133' }}>{record['name']}</span>
+                    <div style={{ marginBottom: '30px',position:'relative' }}>
+                        <Icon component={WarningIcon} style={{ fontSize: '22px' ,position:'absolute',top:'3px'}} />
+                        <span style={{ marginLeft: '27px', fontSize: '18px', color: '#333333' }}>删除角色</span>
                     </div>
                 }
-                open={modalShow} onCancel={handleCancel} width={550} footer={false} centered={true} >
+                open={modalShow} onCancel={handleCancel} width={430} footer={false} centered={true} >
                 <div style={{
-                    color: '#606266',
-                    fontSize: '18px',
+                    color: '#333',
+                    fontWeight: '400',
+                    fontSize: '14px',
+                    marginLeft:'17px',
                     marginTop: '30px',
-                    marginBottom: '30px',
-                }}>是否注销该角色？
+                }}>确认删除【{record['name']}】角色？
                 </div>
                 <Form.Item style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginBottom: '0', marginTop: '30px' }}>
                     <Space>

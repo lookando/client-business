@@ -33,7 +33,7 @@ export default () => {
   const [tableForm] = Form.useForm();
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [dataSource, setDataSource] = useState();
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(5);
   const [position, setPosition] = useState('hidden');
   const [total, setTotal] = useState<number>()
   const [pagination, setPagination] = useState(false);
@@ -109,14 +109,14 @@ export default () => {
   return (
     <>
       <div className={styles.rightItem}>
-        <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '24px 0 0 20px' }}>收集场景表 {isModify ? <span style={{ fontSize: '13px', color: '#DE2930' }}><span style={{ padding: '1px 6px', backgroundColor: '#fbe4e5', }} >编辑中</span></span> : ''}</div>
+        <div className='primaryTitle' style={{ position: 'absolute',fontWeight:'600', zIndex: '999', margin: '24px 0 0 20px' }}>收集场景表 {isModify ? <span style={{ fontSize: '13px', color: '#DE2930' }}><span style={{ padding: '1px 6px', backgroundColor: '#fbe4e5', }} >编辑中</span></span> : ''}</div>
         {/* <div className='primaryTitle' style={{ position: 'absolute', zIndex: '999', margin: '30px 0 0 20px' }}>收集场景表</div> */}
         <EditableProTable<DataSourceType>
           className='tableStyle'
           rowKey="id"
           scroll={{
             x: 960,
-            y: 500
+            y: 430
           }}
           toolBarRender={() => {
             return [
